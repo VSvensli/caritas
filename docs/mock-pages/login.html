@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Caritas Portal</title>
+  <style>
+    :root {
+      --caritas-red: #B10017;
+      --caritas-red-dark: #8F0012;
+      --caritas-beige: #EBE3D7;
+      --caritas-cream: #F9F6F3;
+      --caritas-text: #2C2C2C;
+      --caritas-white: #FFFFFF;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--caritas-text);
+      background: var(--caritas-cream);
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    /* Header */
+    header {
+      background: var(--caritas-white);
+      border-bottom: 1px solid var(--caritas-border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-name {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--caritas-text);
+    }
+
+    .brand-name small {
+      display: block;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(44, 44, 44, 0.55);
+      font-weight: 400;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .header-links a {
+      color: rgba(44, 44, 44, 0.7);
+      text-decoration: none;
+    }
+
+    .header-links a:hover {
+      color: var(--caritas-red);
+    }
+
+    /* Main layout */
+    main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-eyebrow {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-pill);
+      background: var(--caritas-red);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .login-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--caritas-red);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-subtitle {
+      font-size: 0.95rem;
+      color: rgba(44, 44, 44, 0.65);
+    }
+
+    /* Card */
+    .login-card {
+      background: var(--caritas-white);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--caritas-border);
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.7);
+      margin-bottom: 0.45rem;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--caritas-text);
+      background: var(--caritas-cream);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+      outline: none;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--caritas-red);
+      box-shadow: 0 0 0 3px rgba(177, 0, 23, 0.1);
+      background: white;
+    }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+    }
+
+    .form-footer a {
+      color: var(--caritas-red);
+      text-decoration: none;
+    }
+
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: rgba(44, 44, 44, 0.7);
+    }
+
+    .remember input[type="checkbox"] {
+      accent-color: var(--caritas-red);
+      width: 15px;
+      height: 15px;
+    }
+
+    .button-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 50px;
+      padding: 0.9rem 1.5rem;
+      background: var(--caritas-red);
+      color: white;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 180ms ease;
+    }
+
+    .button-primary:hover {
+      background: var(--caritas-red-dark);
+    }
+
+    .login-card-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.88rem;
+      color: rgba(44, 44, 44, 0.55);
+    }
+
+    /* Footer */
+    footer {
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: rgba(44, 44, 44, 0.45);
+      border-top: 1px solid var(--caritas-border);
+      background: var(--caritas-white);
+    }
+
+    footer a {
+      color: var(--caritas-red);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="brand" href="#">
+      <img class="brand-mark" src="../assets/caritas_internationalis_logo.jpeg" alt="Caritas Internationalis" />
+      <div class="brand-name">
+        Caritas Portal
+        <small>Field Impact Dashboard</small>
+      </div>
+    </a>
+    <nav class="header-links">
+      <a href="not-implemented.html">About</a>
+      <a href="not-implemented.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="login-wrap">
+      <div class="login-header">
+        <span class="login-eyebrow">Secure Access</span>
+        <h1 class="login-title">Welcome back</h1>
+      </div>
+
+      <div class="login-card">
+        <form>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" placeholder="you@example.org" autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+
+          <div class="form-footer">
+            <label class="remember">
+              <input type="checkbox" /> Remember me
+            </label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <a href="loading.html" class="button-primary">Sign In</a>
+        </form>
+
+        <div class="login-card-footer">
+          Access is managed by your administrator.<br />
+          Contact your admin if you need an account.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <a href="not-implemented.html">About</a> &nbsp;·&nbsp;
+    <a href="not-implemented.html">Contact</a> &nbsp;·&nbsp;
+    Caritas Field Portal
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caritas Mobile - Home</title>
+  <style>
+    :root {
+      --caritas-red: #b10017;
+      --caritas-cream: #f9f6f3;
+      --caritas-text: #2c2c2c;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --caritas-green: #adc679;
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-pill: 999px;
+      --phone-width: 460px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      color: var(--caritas-text);
+      padding: 20px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      margin: 0 auto 14px;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.92);
+      color: rgba(44, 44, 44, 0.76);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .workspace {
+      width: min(var(--phone-width), 100%);
+      margin: 0 auto;
+    }
+
+    .phone,
+    .card,
+    .metric {
+      border: 1px solid var(--caritas-border);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-label,
+    .metric-label,
+    .card-label,
+    .nav-item {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-label,
+    .metric-label,
+    .card-label {
+      color: rgba(44, 44, 44, 0.48);
+    }
+
+    .phone-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    .phone {
+      width: 100%;
+      padding: 14px;
+      background: #1f1f1f;
+      border-radius: 36px;
+      justify-self: center;
+    }
+
+    .phone-screen {
+      min-height: 740px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      position: relative;
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 12px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: rgba(44, 44, 44, 0.7);
+    }
+
+    .content {
+      padding: 0 18px 94px;
+    }
+
+    .phone-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .phone-title {
+      margin-top: 6px;
+      font-size: 2rem;
+      color: var(--caritas-red);
+    }
+
+    .intro {
+      padding: 6px 4px 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--caritas-red);
+      color: white;
+      font-weight: 700;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .badge {
+      padding: 0.65rem 0.8rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--caritas-border);
+      background: var(--caritas-cream);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .badge-green {
+      background: rgba(173, 198, 121, 0.25);
+      border-color: rgba(83, 105, 45, 0.16);
+      color: #53692d;
+    }
+
+    .cta {
+      display: flex;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .cta,
+    .cta:visited {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 18px;
+      margin-top: 14px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #b10017 0%, #8f0012 100%);
+    }
+
+    .cta-secondary,
+    .cta-secondary:visited {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--caritas-border);
+      color: var(--caritas-text);
+    }
+
+    .cta-secondary p {
+      color: rgba(44, 44, 44, 0.68);
+    }
+
+    .cta-secondary .cta-arrow {
+      background: rgba(44, 44, 44, 0.08);
+    }
+
+    .cta-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.45rem;
+    }
+
+    .cta p {
+      margin-top: 6px;
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .cta-arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 1.1rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric,
+    .card {
+      padding: 16px;
+    }
+
+    .metric-value {
+      margin-top: 6px;
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .metric-copy,
+    .card-copy {
+      margin-top: 6px;
+      color: rgba(44, 44, 44, 0.68);
+      line-height: 1.55;
+      font-size: 0.84rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--caritas-red);
+      box-shadow: 0 0 0 5px rgba(177, 0, 23, 0.1);
+    }
+
+    .timeline-item strong {
+      display: block;
+      font-size: 0.92rem;
+    }
+
+    .timeline-item span {
+      display: block;
+      margin-top: 4px;
+      color: rgba(44, 44, 44, 0.64);
+      line-height: 1.55;
+      font-size: 0.83rem;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(44, 44, 44, 0.08);
+    }
+
+    .nav-item {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      padding: 10px 4px;
+      border-radius: 16px;
+      color: rgba(44, 44, 44, 0.45);
+    }
+
+    .nav-item.active {
+      background: rgba(177, 0, 23, 0.08);
+      color: var(--caritas-red);
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="index.html">← Back to index</a>
+  <main class="workspace">
+    <section class="phone">
+      <div class="phone-screen">
+        <section class="statusbar">
+          <span>09:41</span>
+          <span>4G • 87%</span>
+        </section>
+
+        <div class="content">
+          <section class="intro">
+            <div class="phone-header">
+              <div>
+                <div class="section-label">Welcome</div>
+                <h2 class="phone-title">Desa Sari</h2>
+              </div>
+              <div class="avatar">YR</div>
+            </div>
+
+            <div class="badge-row">
+              <div class="badge">Flores Timur</div>
+            </div>
+          </section>
+
+          <a class="cta" href="report-form.html">
+            <div>
+              <div class="cta-title">Make report</div>
+              <p>Send this week’s farm update.</p>
+            </div>
+            <div class="cta-arrow">→</div>
+          </a>
+
+          <a class="cta cta-secondary" href="planning.html">
+            <div>
+              <div class="cta-title">View calendar</div>
+              <p>See report dates and plan ahead.</p>
+            </div>
+            <div class="cta-arrow">→</div>
+          </a>
+
+          <section class="metric-grid">
+            <article class="metric">
+              <div class="metric-label">Last harvest</div>
+              <div class="metric-value">1,240 kg</div>
+              <div class="metric-copy">Recorded amount</div>
+            </article>
+
+            <article class="metric">
+              <div class="metric-label">Last report</div>
+              <div class="metric-value">14 Apr</div>
+              <div class="metric-copy">Report date</div>
+            </article>
+          </section>
+
+          <section class="card" style="margin-top: 14px;">
+            <div class="card-label">Next steps</div>
+            <div class="metric-value" style="font-size: 1.2rem; margin-top: 8px;">What to do now</div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div>
+                  <strong>Open report</strong>
+                  <span>Tap the red button to start.</span>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div>
+                  <strong>Fill in numbers</strong>
+                  <span>Add harvest, home use, and profit if known.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-item active">Home</div>
+          <div class="nav-item">Reports</div>
+          <div class="nav-item">Plans</div>
+        </nav>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

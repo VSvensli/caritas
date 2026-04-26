@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caritas Mobile - Login</title>
+  <style>
+    :root {
+      --caritas-red: #b10017;
+      --caritas-red-dark: #8f0012;
+      --caritas-cream: #f9f6f3;
+      --caritas-text: #2c2c2c;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-pill: 999px;
+      --phone-width: 460px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      color: var(--caritas-text);
+      padding: 20px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      margin: 0 auto 14px;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.92);
+      color: rgba(44, 44, 44, 0.76);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .workspace {
+      width: min(var(--phone-width), 100%);
+      margin: 0 auto;
+    }
+
+    .phone,
+    .panel,
+    .field,
+    .button-primary,
+    .button-secondary {
+      border: 1px solid var(--caritas-border);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.48);
+    }
+
+    .phone-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    .helper {
+      margin-top: 10px;
+      color: rgba(44, 44, 44, 0.72);
+      line-height: 1.65;
+    }
+
+    .phone {
+      width: 100%;
+      padding: 14px;
+      background: #1f1f1f;
+      border-radius: 36px;
+      justify-self: center;
+    }
+
+    .phone-screen {
+      min-height: 740px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      position: relative;
+      padding: 18px 18px 28px;
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: rgba(44, 44, 44, 0.7);
+    }
+
+    .login-wrap {
+      padding: 72px 0 0;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+    }
+
+    .brand-mark {
+      height: 58px;
+      width: auto;
+      margin-bottom: 12px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .phone-title {
+      margin-top: 6px;
+      font-size: 2.1rem;
+      color: var(--caritas-red);
+    }
+
+    .field {
+      padding: 16px;
+      background: var(--caritas-cream);
+      margin-top: 12px;
+    }
+
+    .field strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.05rem;
+    }
+
+    .button-primary,
+    .button-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .button-primary {
+      margin-top: 14px;
+      background: var(--caritas-red);
+      color: white;
+      border-color: var(--caritas-red);
+    }
+
+    .button-secondary {
+      margin-top: 10px;
+      background: white;
+      color: rgba(44, 44, 44, 0.76);
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="index.html">← Back to index</a>
+  <main class="workspace">
+    <section class="phone">
+      <div class="phone-screen">
+        <section class="statusbar">
+          <span>09:38</span>
+          <span>4G • 90%</span>
+        </section>
+
+        <div class="login-wrap">
+          <section class="panel">
+            <div class="brand-row">
+              <img class="brand-mark" src="../docs/assets/caritas_internationalis_logo.jpeg" alt="Caritas logo" />
+              <div class="brand-copy">
+                <div class="label">Caritas field app</div>
+              </div>
+            </div>
+            <h2 class="phone-title">Login</h2>
+            <p class="helper">Use your phone number and PIN.</p>
+
+            <div class="field">
+              <strong>Phone number</strong>
+            </div>
+
+            <div class="field">
+              <strong>PIN</strong>
+            </div>
+
+            <a class="button-primary" href="home.html">Login</a>
+            <div class="button-secondary">Need help?</div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

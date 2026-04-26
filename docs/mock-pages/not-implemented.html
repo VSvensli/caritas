@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Not Yet Implemented — Caritas Portal</title>
+  <style>
+    :root {
+      --caritas-red: #B10017;
+      --caritas-red-dark: #8F0012;
+      --caritas-beige: #EBE3D7;
+      --caritas-cream: #F9F6F3;
+      --caritas-text: #2C2C2C;
+      --caritas-white: #FFFFFF;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--caritas-text);
+      background: var(--caritas-cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--caritas-white);
+      border-bottom: 1px solid var(--caritas-border);
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-name {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .brand-name small {
+      display: block;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(44, 44, 44, 0.5);
+      font-weight: 400;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+
+    .card {
+      background: var(--caritas-white);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--caritas-border);
+      box-shadow: var(--shadow-soft);
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 2.8rem;
+      margin-bottom: 1.25rem;
+      opacity: 0.35;
+    }
+
+    .title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--caritas-text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: rgba(44, 44, 44, 0.6);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--caritas-red);
+      color: white;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 150ms;
+    }
+
+    .btn-back:hover { background: var(--caritas-red-dark); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="brand" href="dashboard.html">
+      <img class="brand-mark" src="../assets/caritas_internationalis_logo.jpeg" alt="Caritas Internationalis" />
+      <div class="brand-name">
+        Caritas Portal
+        <small>Field Impact Dashboard</small>
+      </div>
+    </a>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="icon">🚧</div>
+      <h1 class="title">Not yet implemented</h1>
+      <p class="subtitle">This page is still being built. Check back soon.</p>
+      <a class="btn-back" href="dashboard.html">← Back to dashboard</a>
+    </div>
+  </main>
+
+</body>
+</html>

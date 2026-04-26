@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ende — Caritas Portal</title>
+  <style>
+    :root {
+      --caritas-red: #B10017;
+      --caritas-red-dark: #8F0012;
+      --caritas-beige: #EBE3D7;
+      --caritas-cream: #F9F6F3;
+      --caritas-text: #2C2C2C;
+      --caritas-green: #ADC679;
+      --caritas-blue: #60B4CD;
+      --caritas-white: #FFFFFF;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --max-width: 1140px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--caritas-text);
+      background: var(--caritas-cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .shell {
+      width: min(var(--max-width), calc(100% - 3rem));
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--caritas-white);
+      border-bottom: 1px solid var(--caritas-border);
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .brand-mark {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-name {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .brand-name small {
+      display: block;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(44, 44, 44, 0.5);
+      font-weight: 400;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.88rem;
+    }
+
+    .header-nav a {
+      color: rgba(44, 44, 44, 0.7);
+      transition: color 150ms;
+    }
+
+    .header-nav a:hover { color: var(--caritas-red); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      background: var(--caritas-cream);
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--caritas-red);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    .btn-logout {
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(44,44,44,0.6);
+      transition: all 150ms;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--caritas-red);
+      color: var(--caritas-red);
+    }
+
+    /* ── Page content ── */
+    main {
+      flex: 1;
+      padding: 2.5rem 0 4rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: rgba(44,44,44,0.5);
+      margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb a {
+      color: var(--caritas-red);
+    }
+
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    .breadcrumb-sep { color: rgba(44,44,44,0.3); }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .page-header-left {}
+
+    .page-eyebrow {
+      display: inline-block;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-pill);
+      background: var(--caritas-red);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--caritas-red);
+      margin-bottom: 0.4rem;
+    }
+
+    .page-meta {
+      font-size: 0.85rem;
+      color: rgba(44,44,44,0.55);
+    }
+
+    .page-meta span {
+      margin-right: 1.2rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.65);
+      background: var(--caritas-white);
+      transition: all 150ms;
+      flex-shrink: 0;
+    }
+
+    .btn-back:hover {
+      border-color: var(--caritas-red);
+      color: var(--caritas-red);
+    }
+
+    /* ── Summary stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--caritas-white);
+      border-radius: 20px;
+      border: 1px solid var(--caritas-border);
+      box-shadow: var(--shadow-soft);
+      padding: 1.25rem 1.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--caritas-red);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-sub {
+      font-size: 0.8rem;
+      color: rgba(44,44,44,0.45);
+    }
+
+    /* ── Two-column layout ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .two-col > * { min-width: 0; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--caritas-white);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--caritas-border);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .card:last-child { margin-bottom: 0; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--caritas-border);
+    }
+
+    .card-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--caritas-text);
+    }
+
+    .card-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.5);
+      background: var(--caritas-cream);
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--caritas-border);
+    }
+
+    /* ── Report table ── */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead th {
+      padding: 0.85rem 1.75rem;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.5);
+      background: var(--caritas-cream);
+      border-bottom: 1px solid var(--caritas-border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(44,44,44,0.05);
+      transition: background 120ms;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--caritas-cream); }
+
+    tbody td {
+      padding: 1rem 1.75rem;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .td-date { color: rgba(44,44,44,0.7); }
+    .td-value { font-weight: 600; }
+    .td-muted { color: rgba(44,44,44,0.7); }
+
+    .table-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--caritas-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: rgba(44,44,44,0.5);
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .page-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--caritas-border);
+      background: transparent;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 130ms;
+      color: var(--caritas-text);
+    }
+
+    .page-btn:hover, .page-btn.active {
+      background: var(--caritas-red);
+      border-color: var(--caritas-red);
+      color: white;
+    }
+
+    /* ── Sidebar cards ── */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid rgba(44,44,44,0.05);
+      font-size: 0.9rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row-label { color: rgba(44,44,44,0.6); }
+    .info-row-value { font-weight: 600; }
+
+    /* ── Planting summary ── */
+    .planting-summary-item {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(44,44,44,0.06);
+    }
+
+    .planting-summary-item:last-child { border-bottom: none; }
+
+    .ps-crop {
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .ps-season {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.45);
+      margin-bottom: 0.75rem;
+    }
+
+    .ps-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: rgba(44,44,44,0.55);
+      margin-bottom: 0.35rem;
+    }
+
+    .ps-bar-track {
+      height: 6px;
+      background: var(--caritas-beige);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .ps-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--caritas-green);
+    }
+
+    .ps-bar-fill.near-harvest { background: var(--caritas-red); }
+
+    .ps-dates {
+      font-size: 0.78rem;
+      color: rgba(44,44,44,0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    /* ── Planting calendar (timeline) ── */
+    .calendar-wrap {
+      margin-top: 1.5rem;
+    }
+
+    .cal-timeline {
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+
+    /* Month header row */
+    .cal-months {
+      display: grid;
+      grid-template-columns: 140px repeat(12, 1fr);
+      gap: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .cal-month-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.45);
+      text-align: center;
+      padding: 0 2px;
+    }
+
+    .cal-month-label:first-child {
+      text-align: left;
+    }
+
+    /* Crop rows */
+    .cal-row {
+      display: grid;
+      grid-template-columns: 140px repeat(12, 1fr);
+      align-items: center;
+      gap: 0;
+      min-height: 52px;
+      border-top: 1px solid rgba(44,44,44,0.05);
+    }
+
+    .cal-row:last-child {
+      border-bottom: 1px solid rgba(44,44,44,0.05);
+    }
+
+    .cal-crop-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--caritas-text);
+      padding-right: 1rem;
+    }
+
+    .cal-crop-sub {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: rgba(44,44,44,0.5);
+      margin-top: 0.15rem;
+    }
+
+    /* Each month cell */
+    .cal-cell {
+      position: relative;
+      height: 52px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Planting bar segment — spans are set via inline style */
+    .cal-bar {
+      position: absolute;
+      height: 20px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Bar spans multiple cells — we use a CSS grid trick with a single-cell bar that overflows */
+    .cal-bar-planting { background: var(--caritas-green); }
+    .cal-bar-growing  { background: var(--caritas-blue);  }
+    .cal-bar-harvest  { background: var(--caritas-red);   }
+
+    /* Today line */
+    .cal-timeline {
+      position: relative;
+    }
+
+    .today-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      border-left: 2px dashed rgba(44, 44, 44, 0.3);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .today-label {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.45);
+      white-space: nowrap;
+    }
+
+    /* Legend */
+    .cal-legend {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--caritas-border);
+    }
+
+    .cal-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      color: rgba(44,44,44,0.65);
+    }
+
+    .cal-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    /* ── Farmers table ── */
+    .gender-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .gender-f { background: #fce8eb; color: #a0002a; }
+    .gender-m { background: #e8f0fc; color: #003b9e; }
+
+    .td-id {
+      font-family: "Courier New", monospace;
+      font-size: 0.8rem;
+      color: rgba(44,44,44,0.5);
+    }
+
+    /* ── Small action buttons in card headers ── */
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(44,44,44,0.6);
+      text-decoration: none;
+      transition: all 150ms;
+    }
+
+    .btn-action:hover {
+      border-color: var(--caritas-red);
+      color: var(--caritas-red);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img class="brand-mark" src="../assets/caritas_internationalis_logo.jpeg" alt="Caritas Internationalis" />
+      <div class="brand-name">
+        Caritas Portal
+        <small>Field Impact Dashboard</small>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="not-implemented.html">About</a>
+      <a href="not-implemented.html">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="user-pill">
+        <div class="user-avatar">AJ</div>
+        Ana Juárez &nbsp;·&nbsp; Admin
+      </div>
+      <a href="login.html" class="btn-logout">Sign out</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="dashboard.html">Dashboard</a>
+        <span class="breadcrumb-sep">›</span>
+        <span>Ende</span>
+      </nav>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <span class="page-eyebrow">Flores, East Nusa Tenggara</span>
+          <h1 class="page-title">Ende</h1>
+          <div class="page-meta">
+            <span>📍 −8.8432° S, 121.6637° E</span>
+            <span>247 mobile users</span>
+            <span>6 reports filed</span>
+          </div>
+        </div>
+        <a class="btn-back" href="dashboard.html">← Back to map</a>
+      </div>
+
+      <!-- Summary stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total yield</div>
+          <div class="stat-value">18.4 t</div>
+          <div class="stat-sub">across all reports</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Self consumption</div>
+          <div class="stat-value">4.1 t</div>
+          <div class="stat-sub">across all reports</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total profit</div>
+          <div class="stat-value">Rp 42 M</div>
+          <div class="stat-sub">across all reports</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fertilizer used</div>
+          <div class="stat-value">680 kg</div>
+          <div class="stat-sub">across all reports</div>
+        </div>
+      </div>
+
+      <!-- Two column: report history | sidebar -->
+      <div class="two-col">
+
+        <!-- Left: report history -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Report history</span>
+              <div style="display:flex; align-items:center; gap:0.6rem;">
+                <span class="card-badge">6 reports</span>
+                <a class="btn-action" href="#">↓ Download</a>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Yield</th>
+                    <th>Self consumption</th>
+                    <th>Profit</th>
+                    <th>Fertilizer used</th>
+                    <th>Fertilizer produced</th>
+                    <th>Pesticide used</th>
+                    <th>Pesticide produced</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-date">14 Apr 2026</td>
+                    <td class="td-value">3.2 t</td>
+                    <td>0.8 t</td>
+                    <td class="td-value">Rp 7.4 M</td>
+                    <td class="td-muted">120 kg</td>
+                    <td class="td-muted">45 kg</td>
+                    <td class="td-muted">18 L</td>
+                    <td class="td-muted">—</td>
+                  </tr>
+                  <tr>
+                    <td class="td-date">18 Jan 2026</td>
+                    <td class="td-value">2.9 t</td>
+                    <td>0.7 t</td>
+                    <td class="td-value">Rp 6.8 M</td>
+                    <td class="td-muted">110 kg</td>
+                    <td class="td-muted">38 kg</td>
+                    <td class="td-muted">14 L</td>
+                    <td class="td-muted">6 L</td>
+                  </tr>
+                  <tr>
+                    <td class="td-date">5 Oct 2025</td>
+                    <td class="td-value">3.5 t</td>
+                    <td>0.6 t</td>
+                    <td class="td-value">Rp 8.1 M</td>
+                    <td class="td-muted">130 kg</td>
+                    <td class="td-muted">52 kg</td>
+                    <td class="td-muted">22 L</td>
+                    <td class="td-muted">8 L</td>
+                  </tr>
+                  <tr>
+                    <td class="td-date">22 Jul 2025</td>
+                    <td class="td-value">2.8 t</td>
+                    <td>0.9 t</td>
+                    <td class="td-value">Rp 6.2 M</td>
+                    <td class="td-muted">105 kg</td>
+                    <td class="td-muted">—</td>
+                    <td class="td-muted">12 L</td>
+                    <td class="td-muted">—</td>
+                  </tr>
+                  <tr>
+                    <td class="td-date">3 Apr 2025</td>
+                    <td class="td-value">3.1 t</td>
+                    <td>0.6 t</td>
+                    <td class="td-value">Rp 7.1 M</td>
+                    <td class="td-muted">115 kg</td>
+                    <td class="td-muted">41 kg</td>
+                    <td class="td-muted">16 L</td>
+                    <td class="td-muted">5 L</td>
+                  </tr>
+                  <tr>
+                    <td class="td-date">11 Jan 2025</td>
+                    <td class="td-value">2.9 t</td>
+                    <td>0.5 t</td>
+                    <td class="td-value">Rp 6.4 M</td>
+                    <td class="td-muted">100 kg</td>
+                    <td class="td-muted">35 kg</td>
+                    <td class="td-muted">11 L</td>
+                    <td class="td-muted">4 L</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span>Showing 6 of 6 reports</span>
+              <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: sidebar -->
+        <div>
+          <!-- Village info -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Village info</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Region</span>
+              <span class="info-row-value">Flores, NTT</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Mobile users</span>
+              <span class="info-row-value">247</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Latitude</span>
+              <span class="info-row-value">−8.8432°</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Longitude</span>
+              <span class="info-row-value">121.6637°</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">First report</span>
+              <span class="info-row-value">Jan 2025</span>
+            </div>
+          </div>
+
+          <!-- In the ground -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">In the ground</span>
+              <span class="card-badge">Now</span>
+            </div>
+            <div class="planting-summary-item">
+              <div class="ps-crop">Rice (Padi)</div>
+              <div class="ps-season">Season 1 · 2026</div>
+              <div class="ps-progress-label">
+                <span>Growing</span>
+                <span>75%</span>
+              </div>
+              <div class="ps-bar-track">
+                <div class="ps-bar-fill near-harvest" style="width: 75%;"></div>
+              </div>
+              <div class="ps-dates">
+                <span>Planted: Feb 2026</span>
+                <span>Harvest: May 2026</span>
+                <span style="color: var(--caritas-red); font-weight: 600;">~5 weeks remaining</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /two-col -->
+
+      <!-- Full-width planting calendar -->
+      <div class="card calendar-wrap">
+        <div class="card-header">
+          <span class="card-title">Planting calendar</span>
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <span class="card-badge">2026</span>
+            <button class="btn-action">✎ Edit</button>
+          </div>
+        </div>
+
+        <div class="cal-timeline">
+          <!-- Month headers -->
+          <div class="cal-months">
+            <div class="cal-month-label"></div>
+            <div class="cal-month-label">Jan</div>
+            <div class="cal-month-label">Feb</div>
+            <div class="cal-month-label">Mar</div>
+            <div class="cal-month-label">Apr</div>
+            <div class="cal-month-label">May</div>
+            <div class="cal-month-label">Jun</div>
+            <div class="cal-month-label">Jul</div>
+            <div class="cal-month-label">Aug</div>
+            <div class="cal-month-label">Sep</div>
+            <div class="cal-month-label">Oct</div>
+            <div class="cal-month-label">Nov</div>
+            <div class="cal-month-label">Dec</div>
+          </div>
+
+          <!--
+            Each crop row uses a CSS grid. Bars are absolutely positioned
+            relative to the cell they start in, using width to span across months.
+            One grid column = 1 month. Bar width: (span months / 1) * 100%.
+          -->
+
+          <!-- Rice (Padi) — planted Feb, growing Mar–Apr, harvest May -->
+          <div class="cal-row">
+            <div class="cal-crop-name">
+              Rice (Padi)
+              <span class="cal-crop-sub">Season 1 · 2026</span>
+            </div>
+            <!-- Jan: empty -->
+            <div class="cal-cell"></div>
+            <!-- Feb: planting starts — bar spans Feb–Apr (3 months) -->
+            <div class="cal-cell" style="position:relative;">
+              <div class="cal-bar cal-bar-planting" style="left:0; width:calc(100% + 0px); min-width: 28px;">Planting</div>
+            </div>
+            <!-- Mar: growing -->
+            <div class="cal-cell" style="position:relative;">
+              <div class="cal-bar cal-bar-growing" style="left:0; width:calc(200% + 4px); min-width: 28px;">Growing</div>
+            </div>
+            <!-- Apr: (covered by Mar bar) -->
+            <div class="cal-cell"></div>
+            <!-- May: harvest -->
+            <div class="cal-cell" style="position:relative;">
+              <div class="cal-bar cal-bar-harvest" style="left:0; width:100%; min-width: 28px;">Harvest</div>
+            </div>
+            <!-- Jun–Dec: empty -->
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+          </div>
+
+          <!-- Soy (Kedelai) — planted Aug 2025 (shown as Jun plan), harvest Nov -->
+          <div class="cal-row">
+            <div class="cal-crop-name">
+              Soy (Kedelai)
+              <span class="cal-crop-sub">Season 2 · 2025</span>
+            </div>
+            <!-- Jan–Jul: empty -->
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <div class="cal-cell"></div>
+            <!-- Aug: planting -->
+            <div class="cal-cell" style="position:relative;">
+              <div class="cal-bar cal-bar-planting" style="left:0; width:100%; min-width: 28px;">Planting</div>
+            </div>
+            <!-- Sep: growing — spans Sep–Oct (2 months) -->
+            <div class="cal-cell" style="position:relative;">
+              <div class="cal-bar cal-bar-growing" style="left:0; width:calc(200% + 4px); min-width: 28px;">Growing</div>
+            </div>
+            <!-- Oct: (covered) -->
+            <div class="cal-cell"></div>
+            <!-- Nov: harvest -->
+            <div class="cal-cell" style="position:relative;">
+              <div class="cal-bar cal-bar-harvest" style="left:0; width:100%; min-width: 28px;">Harvest</div>
+            </div>
+            <!-- Dec: empty -->
+            <div class="cal-cell"></div>
+          </div>
+
+          <!-- Today line — positioned by script below -->
+          <div class="today-line" id="today-line">
+            <span class="today-label" id="today-label">Today</span>
+          </div>
+
+        </div><!-- /cal-timeline -->
+
+        <div class="cal-legend">
+          <div class="cal-legend-item">
+            <div class="cal-legend-dot" style="background: var(--caritas-green);"></div>
+            Planting
+          </div>
+          <div class="cal-legend-item">
+            <div class="cal-legend-dot" style="background: var(--caritas-blue);"></div>
+            Growing
+          </div>
+          <div class="cal-legend-item">
+            <div class="cal-legend-dot" style="background: var(--caritas-red);"></div>
+            Harvest
+          </div>
+        </div>
+      </div>
+
+      <!-- Farmers -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+          <div style="display: flex; align-items: baseline; gap: 0.75rem;">
+            <span class="card-title">Farmers</span>
+            <span style="font-size: 0.78rem; color: rgba(44,44,44,0.45);">50% women</span>
+          </div>
+          <span class="card-badge">8 registered</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-id">END-001</td>
+                <td class="td-value">Budi Santoso</td>
+                <td><span class="gender-badge gender-m">Male</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-002</td>
+                <td class="td-value">Siti Rahayu</td>
+                <td><span class="gender-badge gender-f">Female</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-003</td>
+                <td class="td-value">Ahmad Wijaya</td>
+                <td><span class="gender-badge gender-m">Male</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-004</td>
+                <td class="td-value">Dewi Kusuma</td>
+                <td><span class="gender-badge gender-f">Female</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-005</td>
+                <td class="td-value">Hendra Putra</td>
+                <td><span class="gender-badge gender-m">Male</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-006</td>
+                <td class="td-value">Rina Marlina</td>
+                <td><span class="gender-badge gender-f">Female</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-007</td>
+                <td class="td-value">Joko Susilo</td>
+                <td><span class="gender-badge gender-m">Male</span></td>
+              </tr>
+              <tr>
+                <td class="td-id">END-008</td>
+                <td class="td-value">Nurul Hidayah</td>
+                <td><span class="gender-badge gender-f">Female</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /shell -->
+  </main>
+
+  <script>
+    // Position the today line based on actual cell geometry
+    function positionTodayLine() {
+      const today = new Date();
+      const month = today.getMonth(); // 0-indexed
+      const day = today.getDate();
+      const daysInMonth = new Date(today.getFullYear(), month + 1, 0).getDate();
+
+      const monthHeaders = document.querySelectorAll('.cal-months .cal-month-label');
+      // First child is the empty label column, so month index 0 = child index 1
+      const targetCell = monthHeaders[month + 1];
+      if (!targetCell) return;
+
+      const timeline = document.querySelector('.cal-timeline');
+      const timelineRect = timeline.getBoundingClientRect();
+      const cellRect = targetCell.getBoundingClientRect();
+
+      const fraction = (day - 1) / daysInMonth;
+      const leftPx = (cellRect.left - timelineRect.left) + fraction * cellRect.width;
+
+      const line = document.getElementById('today-line');
+      line.style.left = leftPx + 'px';
+    }
+
+    window.addEventListener('load', positionTodayLine);
+    window.addEventListener('resize', positionTodayLine);
+  </script>
+</body>
+</html>

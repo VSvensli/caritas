@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading — Caritas Portal</title>
+  <style>
+    :root {
+      --caritas-red: #B10017;
+      --caritas-cream: #F9F6F3;
+      --caritas-text: #2C2C2C;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--caritas-cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .spinner {
+      width: 80px;
+      height: 80px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.4);
+    }
+
+    /* Auto-redirect after 2.5s for mockup demo purposes */
+  </style>
+</head>
+<body>
+
+  <img class="spinner" src="../assets/caritas-spinner.svg" alt="Loading…" />
+  <span class="label">Loading</span>
+
+  <script>
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2500);
+  </script>
+
+</body>
+</html>

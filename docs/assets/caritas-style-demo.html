@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caritas Style Demo</title>
+  <style>
+    :root {
+      --caritas-red: #b10017;
+      --caritas-red-dark: #8f0012;
+      --caritas-beige: #ebe3d7;
+      --caritas-cream: #f9f6f3;
+      --caritas-text: #2c2c2c;
+      --caritas-green: #adc679;
+      --caritas-blue: #60b4cd;
+      --caritas-white: #ffffff;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --max-width: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--caritas-text);
+      background: #ffffff;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 0.85rem 1.15rem;
+      border-radius: var(--radius-pill);
+      background: var(--caritas-red);
+      color: var(--caritas-white);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section {
+      padding: 4rem 0;
+    }
+
+    .section-title,
+    .hero-title,
+    .card-title,
+    .feature-title,
+    .quote-text,
+    .stat-value,
+    .resource-title {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.82);
+      border-bottom: 1px solid rgba(44, 44, 44, 0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: var(--caritas-red);
+      color: var(--caritas-white);
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-copy small {
+      display: block;
+      color: rgba(44, 44, 44, 0.66);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: rgba(44, 44, 44, 0.86);
+    }
+
+    .nav a:hover {
+      color: var(--caritas-red);
+    }
+
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: rgba(44, 44, 44, 0.86);
+    }
+
+    .nav-dropdown-toggle::after {
+      content: "";
+      width: 0.55rem;
+      height: 0.55rem;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translateY(-1px);
+    }
+
+    .nav-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 14px);
+      left: 0;
+      min-width: 220px;
+      padding: 0.6rem;
+      border: 1px solid rgba(44, 44, 44, 0.08);
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: 0 24px 50px rgba(44, 44, 44, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: 160ms ease;
+    }
+
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 0.8rem 0.9rem;
+      border-radius: 14px;
+      white-space: nowrap;
+    }
+
+    .nav-dropdown-menu a:hover {
+      background: var(--caritas-cream);
+      color: var(--caritas-red);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      min-height: 48px;
+      padding: 0.9rem 1.4rem;
+      border: 1px solid var(--caritas-red);
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: 180ms ease;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--caritas-red);
+      color: var(--caritas-white);
+    }
+
+    .button-primary:hover {
+      background: var(--caritas-red-dark);
+      border-color: var(--caritas-red-dark);
+    }
+
+    .button-secondary {
+      background: transparent;
+      color: var(--caritas-red);
+    }
+
+    .button-secondary:hover {
+      background: rgba(177, 0, 23, 0.06);
+    }
+
+    .button-quiet {
+      border-color: rgba(44, 44, 44, 0.14);
+      background: #ffffff;
+      color: var(--caritas-text);
+    }
+
+    .button-quiet:hover {
+      border-color: rgba(44, 44, 44, 0.24);
+      background: var(--caritas-cream);
+    }
+
+    .hero {
+      padding: 1.2rem 0 0;
+    }
+
+    .hero-frame {
+      position: relative;
+      min-height: 78vh;
+      overflow: hidden;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top left, rgba(173, 198, 121, 0.22), transparent 28%),
+        linear-gradient(135deg, #f9f6f3 0%, #ebe3d7 100%);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(44, 44, 44, 0.06);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: end;
+      min-height: 78vh;
+      padding: 4rem;
+      color: var(--caritas-text);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.9fr);
+      gap: 2rem;
+      align-items: end;
+    }
+
+    .hero-title {
+      margin: 1rem 0 1rem;
+      font-size: clamp(3.2rem, 7vw, 6rem);
+      max-width: 10ch;
+      color: var(--caritas-red);
+    }
+
+    .hero-copy {
+      max-width: 56ch;
+      font-size: 1.08rem;
+      color: rgba(44, 44, 44, 0.82);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-top: 1.5rem;
+    }
+
+    .hero-card {
+      padding: 1.5rem;
+      border-radius: var(--radius-card);
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(44, 44, 44, 0.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 40px rgba(44, 44, 44, 0.08);
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-card p {
+      margin: 0 0 1rem;
+      color: rgba(44, 44, 44, 0.78);
+    }
+
+    .panel {
+      position: relative;
+      margin-top: -88px;
+      z-index: 2;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+      padding: 1.25rem;
+      background: var(--caritas-white);
+      border-radius: 28px 28px 0 0;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feature-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 300px;
+      padding: 1.4rem;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.14));
+      color: var(--caritas-white);
+    }
+
+    .feature-card:nth-child(1) {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.46)),
+        url("https://images.unsplash.com/photo-1524069290683-0457abfe42c3?auto=format&fit=crop&w=1200&q=80")
+          center/cover;
+    }
+
+    .feature-card:nth-child(2) {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.46)),
+        url("https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80")
+          center/cover;
+    }
+
+    .feature-card:nth-child(3) {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.46)),
+        url("https://images.unsplash.com/photo-1469571486292-b53601010376?auto=format&fit=crop&w=1200&q=80")
+          center/cover;
+    }
+
+    .feature-tag {
+      align-self: flex-start;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-pill);
+      background: var(--caritas-red);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .feature-title {
+      margin: 0.9rem 0 0.6rem;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+    }
+
+    .feature-card p {
+      margin: 0;
+      max-width: 32ch;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: end;
+      margin-bottom: 1.75rem;
+    }
+
+    .section-title {
+      margin: 0.8rem 0 0;
+      font-size: clamp(2.2rem, 4.8vw, 4rem);
+      color: var(--caritas-red);
+      max-width: 12ch;
+    }
+
+    .section-copy {
+      max-width: 52ch;
+      color: rgba(44, 44, 44, 0.8);
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .story-card,
+    .info-card,
+    .resource-card,
+    .quote-card,
+    .donate-card {
+      border-radius: var(--radius-card);
+      background: var(--caritas-white);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .story-card {
+      overflow: hidden;
+    }
+
+    .story-media {
+      aspect-ratio: 16 / 9;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
+        url("https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=1600&q=80")
+          center/cover;
+    }
+
+    .story-body,
+    .info-card,
+    .resource-card,
+    .quote-card,
+    .donate-card {
+      padding: 1.7rem;
+    }
+
+    .card-kicker {
+      margin-bottom: 0.8rem;
+      color: var(--caritas-red);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-title,
+    .resource-title {
+      margin: 0 0 0.7rem;
+      color: var(--caritas-red);
+      font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      color: rgba(44, 44, 44, 0.64);
+      font-size: 0.9rem;
+    }
+
+    .info-stack {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .info-card {
+      background: linear-gradient(180deg, var(--caritas-cream), var(--caritas-white));
+      border: 1px solid var(--caritas-border);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .stat {
+      padding: 1.4rem;
+      border-radius: 20px;
+      background: var(--caritas-beige);
+      border: 1px solid rgba(44, 44, 44, 0.08);
+    }
+
+    .stat-value {
+      color: var(--caritas-red);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+    }
+
+    .stat-label {
+      margin-top: 0.35rem;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(44, 44, 44, 0.7);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .resource-card {
+      border: 1px solid var(--caritas-border);
+      background: linear-gradient(180deg, #ffffff, #fbf8f5);
+    }
+
+    .resource-card p {
+      margin-bottom: 1.5rem;
+    }
+
+    .quote-wrap {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .quote-card {
+      background: var(--caritas-red);
+      color: var(--caritas-white);
+    }
+
+    .quote-text {
+      margin: 0;
+      font-size: clamp(2rem, 4.4vw, 3.8rem);
+    }
+
+    .quote-credit {
+      margin-top: 1.4rem;
+      padding-left: 1rem;
+      border-left: 2px solid rgba(255, 255, 255, 0.55);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+    }
+
+    .donate-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(180deg, var(--caritas-cream), var(--caritas-beige));
+      border: 1px solid rgba(44, 44, 44, 0.08);
+    }
+
+    .donate-list {
+      display: grid;
+      gap: 0.7rem;
+      margin: 1.25rem 0 1.5rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .donate-list li {
+      padding: 0.8rem 0.95rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      font-weight: 600;
+    }
+
+    .footer {
+      padding: 3rem 0 4rem;
+      background: #2b1f22;
+      color: rgba(255, 255, 255, 0.84);
+      margin-top: 3rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      gap: 1rem;
+    }
+
+    .footer h3 {
+      margin: 0 0 0.8rem;
+      color: var(--caritas-white);
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.6rem;
+    }
+
+    .footer p,
+    .footer li {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-content {
+        padding: 3rem 2rem;
+      }
+
+      .hero-grid,
+      .story-grid,
+      .quote-wrap,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-grid,
+      .stats,
+      .resources-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 767px) {
+      .topbar-inner,
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .hero-frame,
+      .hero-content {
+        min-height: auto;
+      }
+
+      .hero-title {
+        font-size: clamp(2.6rem, 14vw, 4rem);
+      }
+
+      .panel {
+        margin-top: -42px;
+      }
+
+      .panel-grid,
+      .stats,
+      .resources-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-card {
+        min-height: 250px;
+      }
+
+      .section {
+        padding: 3rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div class="brand-copy">
+          Caritas Demo
+          <small>Editorial Relief Theme</small>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="#stories">Stories</a>
+        <a href="#impact">Impact</a>
+        <div class="nav-dropdown">
+          <a class="nav-dropdown-toggle" href="#resources" aria-haspopup="true">More</a>
+          <div class="nav-dropdown-menu">
+            <a href="#resources">Reports</a>
+            <a href="#resources">Campaigns</a>
+            <a href="#support">Ways to Give</a>
+          </div>
+        </div>
+        <a href="#resources">Resources</a>
+        <a class="button button-quiet" href="#support">Support Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-frame">
+          <div class="hero-content">
+            <div class="hero-grid">
+              <div>
+                <span class="eyebrow">Ending Poverty. Restoring Dignity.</span>
+                <h1 class="hero-title">Ordinary people. Extraordinary care.</h1>
+                <p class="hero-copy">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id
+                  eros nec justo pulvinar dictum. Duis nec risus volutpat, semper nibh
+                  non, laoreet lorem. Praesent at ipsum ac neque facilisis pharetra.
+                </p>
+                <div class="hero-actions">
+                  <a class="button button-primary" href="#stories">Read More</a>
+                  <a class="button button-secondary" href="#resources">Explore Resources</a>
+                </div>
+              </div>
+              <aside class="hero-card">
+                <strong>Current Appeal</strong>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                  dapibus, lorem at iaculis tincidunt, dui nibh tincidunt arcu.
+                </p>
+                <a class="button button-primary" href="#support">Donate Now</a>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="shell">
+        <div class="panel-grid">
+          <article class="feature-card">
+            <span class="feature-tag">Crisis Response</span>
+            <div>
+              <h2 class="feature-title">Immediate relief with local presence</h2>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.</p>
+            </div>
+          </article>
+          <article class="feature-card">
+            <span class="feature-tag">Communities</span>
+            <div>
+              <h2 class="feature-title">Long-term recovery rooted in dignity</h2>
+              <p>Quisque efficitur, lectus sed pretium consequat, velit augue sodales purus.</p>
+            </div>
+          </article>
+          <article class="feature-card">
+            <span class="feature-tag">Advocacy</span>
+            <div>
+              <h2 class="feature-title">Shared action for a more just world</h2>
+              <p>Vestibulum ut arcu sit amet lacus consequat luctus at vitae augue.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="stories" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Featured Story</span>
+            <h2 class="section-title">Stories of hope, solidarity, and renewal</h2>
+          </div>
+          <p class="section-copy">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer finibus
+            massa sed tortor semper, id faucibus mauris efficitur. Curabitur ut
+            vulputate ipsum, ac congue sem.
+          </p>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <div class="story-media"></div>
+            <div class="story-body">
+              <div class="card-kicker">Field Report</div>
+              <h3 class="card-title">Hope grows where community stays present</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+                vehicula, turpis vitae imperdiet feugiat, felis eros dictum justo,
+                sed gravida risus erat quis nisi. Vivamus congue metus velit.
+              </p>
+              <div class="card-meta">
+                <span>April 2026</span>
+                <span>6 min read</span>
+                <span>East Africa</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="info-stack">
+            <aside class="info-card">
+              <div class="card-kicker">Our Work</div>
+              <h3 class="resource-title">Integrated support with human focus</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non
+                justo posuere, blandit libero sed, commodo augue.
+              </p>
+              <a class="button button-secondary" href="#impact">What We Do</a>
+            </aside>
+
+            <aside class="info-card">
+              <div class="card-kicker">Campaign</div>
+              <h3 class="resource-title">Building stronger, fairer systems</h3>
+              <p>
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                accusantium doloremque laudantium.
+              </p>
+              <a class="button button-secondary" href="#resources">Discover More</a>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="impact" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Impact</span>
+            <h2 class="section-title">Measured action with global reach</h2>
+          </div>
+          <p class="section-copy">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+            commodo, nisl non volutpat blandit, lorem erat mattis magna.
+          </p>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-value">162</div>
+            <div class="stat-label">Partner Networks</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">200+</div>
+            <div class="stat-label">Countries Reached</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">48K</div>
+            <div class="stat-label">Local Volunteers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Emergency Response</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Resources</span>
+            <h2 class="section-title">Cards and components in the same visual language</h2>
+          </div>
+          <p class="section-copy">
+            The structure below uses editorial cards, pill actions, warm neutrals,
+            and restrained hierarchy to stay close to the Caritas homepage style.
+          </p>
+        </div>
+
+        <div class="resources-grid">
+          <article class="resource-card">
+            <div class="card-kicker">Report</div>
+            <h3 class="resource-title">Annual review and regional outlook</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+              malesuada faucibus lorem, sit amet porttitor erat efficitur et.
+            </p>
+            <a class="button button-secondary" href="#">Read Report</a>
+          </article>
+
+          <article class="resource-card">
+            <div class="card-kicker">Article</div>
+            <h3 class="resource-title">Why durable recovery requires trust</h3>
+            <p>
+              Suspendisse potenti. Curabitur luctus posuere mi, non fermentum nisl
+              gravida a. Ut sit amet lorem sed massa condimentum.
+            </p>
+            <a class="button button-secondary" href="#">Read Article</a>
+          </article>
+
+          <article class="resource-card">
+            <div class="card-kicker">Toolkit</div>
+            <h3 class="resource-title">Community engagement starter pack</h3>
+            <p>
+              Fusce rutrum sem in aliquam faucibus. Praesent vulputate velit sit
+              amet ligula gravida, vitae hendrerit nibh dapibus.
+            </p>
+            <a class="button button-secondary" href="#">Open Toolkit</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="support" class="section">
+      <div class="shell">
+        <div class="quote-wrap">
+          <article class="quote-card">
+            <div class="card-kicker" style="color: rgba(255,255,255,0.8);">Message</div>
+            <p class="quote-text">
+              “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              facilisi. Integer vitae dui non erat luctus aliquet.”
+            </p>
+            <div class="quote-credit">Lorem Ipsum, Community Director</div>
+          </article>
+
+          <aside class="donate-card">
+            <div>
+              <div class="card-kicker">Support Us</div>
+              <h3 class="resource-title">Choose a giving path</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                facilisis mattis sapien, in lacinia sem pharetra eget.
+              </p>
+              <ul class="donate-list">
+                <li>Emergency Response Fund</li>
+                <li>Community Recovery</li>
+                <li>Climate Resilience</li>
+              </ul>
+            </div>
+            <a class="button button-primary" href="#">Donate Now</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-grid">
+      <div>
+        <h3>Caritas Demo</h3>
+        <p>
+          A static HTML mock page inspired by the live Caritas visual system:
+          editorial serif headings, strong red accents, humanitarian photography,
+          rounded cards, and restrained nonprofit styling.
+        </p>
+      </div>
+      <div>
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#stories">Stories</a></li>
+          <li><a href="#impact">Impact</a></li>
+          <li><a href="#resources">Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <ul>
+          <li>hello@example.org</li>
+          <li>+00 123 456 789</li>
+          <li>Via Lorem Ipsum 24</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

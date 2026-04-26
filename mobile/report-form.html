@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caritas Mobile - Report Form</title>
+  <style>
+    :root {
+      --caritas-red: #b10017;
+      --caritas-cream: #f9f6f3;
+      --caritas-text: #2c2c2c;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --caritas-blue: #60b4cd;
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-pill: 999px;
+      --phone-width: 460px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      color: var(--caritas-text);
+      padding: 20px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .workspace {
+      width: min(var(--phone-width), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      margin: 0 auto 14px;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.92);
+      color: rgba(44, 44, 44, 0.76);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .phone,
+    .field,
+    .info-card {
+      border: 1px solid var(--caritas-border);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.48);
+    }
+
+    .phone-title,
+    .field-value {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    .field-hint,
+    .info-row {
+      margin-top: 10px;
+      color: rgba(44, 44, 44, 0.72);
+      line-height: 1.65;
+    }
+
+    .phone {
+      width: 100%;
+      padding: 14px;
+      background: #1f1f1f;
+      border-radius: 36px;
+      justify-self: center;
+    }
+
+    .phone-screen {
+      min-height: 740px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      position: relative;
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 12px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: rgba(44, 44, 44, 0.7);
+    }
+
+    .content {
+      padding: 0 18px 94px;
+    }
+
+    .content-compact {
+      min-height: calc(740px - 30px - 94px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-card {
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    .phone + .phone .phone-screen {
+      background: linear-gradient(180deg, #fffdfb 0%, #f7f2eb 100%);
+    }
+
+    .phone:nth-of-type(3) .phone-screen {
+      background: linear-gradient(180deg, #fffdfb 0%, #f4efe7 100%);
+    }
+
+    .screen-intro {
+      padding: 6px 4px 2px;
+    }
+
+    .phone-title {
+      margin-top: 6px;
+      font-size: 2rem;
+      color: var(--caritas-red);
+    }
+
+    .header-row,
+    .progress-row,
+    .button-row,
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .badge {
+      padding: 0.65rem 0.8rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--caritas-border);
+      background: var(--caritas-cream);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .field-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .field {
+      padding: 16px;
+      background: var(--caritas-cream);
+    }
+
+    .field-value {
+      margin-top: 8px;
+      font-size: 1.2rem;
+    }
+
+    .field-hint {
+      font-size: 0.82rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(44, 44, 44, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .stepper button,
+    .stepper span {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--caritas-text);
+    }
+
+    .stepper button {
+      cursor: pointer;
+    }
+
+    .stepper span {
+      width: 52px;
+      border-left: 1px solid rgba(44, 44, 44, 0.08);
+      border-right: 1px solid rgba(44, 44, 44, 0.08);
+      font-size: 0.92rem;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      margin-top: 14px;
+    }
+
+    .button-primary,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .button-primary {
+      background: var(--caritas-red);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      border: 1px solid var(--caritas-border);
+      color: rgba(44, 44, 44, 0.7);
+    }
+
+    .quiet-link {
+      display: inline-flex;
+      margin-top: 10px;
+      font-size: 0.82rem;
+      color: rgba(44, 44, 44, 0.52);
+      text-decoration: underline;
+      text-underline-offset: 0.16em;
+    }
+
+    .info-card {
+      background: linear-gradient(180deg, rgba(96, 180, 205, 0.12) 0%, rgba(255, 255, 255, 0.96) 100%);
+    }
+
+    .success-card {
+      margin-top: 14px;
+      padding: 18px;
+      border: 1px solid rgba(83, 105, 45, 0.18);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(173, 198, 121, 0.26) 0%, rgba(255, 255, 255, 0.96) 100%);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .success-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #5c7830;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .success-title {
+      margin-top: 10px;
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.35rem;
+      line-height: 1.05;
+    }
+
+    .success-copy {
+      margin-top: 8px;
+      color: rgba(44, 44, 44, 0.72);
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .content-compact .button-row {
+      margin-top: auto;
+    }
+
+    .content-compact .quiet-link {
+      margin-top: 10px;
+    }
+
+    .info-row {
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid rgba(44, 44, 44, 0.08);
+      font-size: 0.86rem;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(44, 44, 44, 0.08);
+    }
+
+    .nav-item {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      padding: 10px 4px;
+      border-radius: 16px;
+      color: rgba(44, 44, 44, 0.45);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-item.active {
+      background: rgba(177, 0, 23, 0.08);
+      color: var(--caritas-red);
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="index.html">← Back to index</a>
+  <main class="workspace">
+    <section class="phone" id="report-entry">
+      <div class="phone-screen">
+        <section class="statusbar">
+          <span>09:46</span>
+          <span>Offline draft saved</span>
+        </section>
+
+        <div class="content content-compact">
+          <section class="screen-intro">
+            <div class="header-row">
+              <div>
+                <div class="label">Report</div>
+                <h2 class="phone-title">Farm report</h2>
+              </div>
+            </div>
+          </section>
+
+          <section class="field-list">
+            <article class="field" data-field="fertilizer-production" data-unit=" kg" data-step="5" data-value="240">
+              <div class="label">Fertilizer production</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="fertilizer-production">240 kg</div>
+                  <div class="field-hint">Made this week</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease fertilizer production">−</button>
+                  <span>5</span>
+                  <button type="button" data-action="increase" aria-label="Increase fertilizer production">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="fertilizer-usage" data-unit=" kg" data-step="5" data-value="180">
+              <div class="label">Fertilizer usage</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="fertilizer-usage">180 kg</div>
+                  <div class="field-hint">Used on fields</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease fertilizer usage">−</button>
+                  <span>5</span>
+                  <button type="button" data-action="increase" aria-label="Increase fertilizer usage">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="pesticide-production" data-unit=" L" data-step="1" data-value="60">
+              <div class="label">Pesticide production</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="pesticide-production">60 L</div>
+                  <div class="field-hint">Made this week</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease pesticide production">−</button>
+                  <span>1</span>
+                  <button type="button" data-action="increase" aria-label="Increase pesticide production">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="pesticide-usage" data-unit=" L" data-step="1" data-value="42">
+              <div class="label">Pesticide usage</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="pesticide-usage">42 L</div>
+                  <div class="field-hint">Used on fields</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease pesticide usage">−</button>
+                  <span>1</span>
+                  <button type="button" data-action="increase" aria-label="Increase pesticide usage">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="harvest" data-unit=" kg" data-step="10" data-value="1280">
+              <div class="label">Harvest</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="harvest">1,280 kg</div>
+                  <div class="field-hint">Crop collected</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease harvest">−</button>
+                  <span>10</span>
+                  <button type="button" data-action="increase" aria-label="Increase harvest">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="self-consumption" data-unit=" kg" data-step="5" data-value="320">
+              <div class="label">Self consumption</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="self-consumption">320 kg</div>
+                  <div class="field-hint">Kept by families</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease self consumption">−</button>
+                  <span>5</span>
+                  <button type="button" data-action="increase" aria-label="Increase self consumption">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="sold" data-unit=" kg" data-step="10" data-value="860">
+              <div class="label">Sold</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="sold">860 kg</div>
+                  <div class="field-hint">Amount sold</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease sold amount">−</button>
+                  <span>10</span>
+                  <button type="button" data-action="increase" aria-label="Increase sold amount">+</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="field" data-field="money-from-sale" data-unit="" data-step="50000" data-value="8450000" data-prefix="Rp ">
+              <div class="label">Money from sale</div>
+              <div class="field-row">
+                <div>
+                  <div class="field-value" data-display="money-from-sale">Rp 8,450,000</div>
+                  <div class="field-hint">Total cash received</div>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-action="decrease" aria-label="Decrease money from sale">−</button>
+                  <span>50k</span>
+                  <button type="button" data-action="increase" aria-label="Increase money from sale">+</button>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section class="button-row">
+            <a class="button-primary" href="#report-review">Submit report</a>
+            <a class="button-secondary" href="home.html">Back</a>
+          </section>
+
+          <a class="quiet-link" href="#">See old reports</a>
+
+          <section class="info-card">
+            <div class="label">Help</div>
+            <div class="field-value" style="font-size: 1.15rem; margin-top: 8px;">You can leave a box empty</div>
+
+            <div class="info-row">
+              <span>Do not know one answer?</span>
+              <strong>Skip it</strong>
+            </div>
+
+            <div class="info-row">
+              <span>No internet?</span>
+              <strong>It stays on the phone</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Press submit</span>
+              <strong>Send when ready</strong>
+            </div>
+          </section>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-item">Home</div>
+          <div class="nav-item active">Reports</div>
+          <div class="nav-item">Plans</div>
+          <div class="nav-item">Me</div>
+        </nav>
+      </div>
+    </section>
+
+    <section class="phone" id="report-review">
+      <div class="phone-screen">
+        <section class="statusbar">
+          <span>09:48</span>
+          <span>4G • 90%</span>
+        </section>
+
+        <div class="content content-compact">
+          <section class="screen-intro">
+            <div class="header-row">
+              <div>
+                <div class="label">Report</div>
+                <h2 class="phone-title">Check report</h2>
+              </div>
+            </div>
+          </section>
+
+          <section class="info-card">
+            <div class="label">Ready to send</div>
+            <div class="field-value" style="font-size: 1.2rem; margin-top: 8px;">Your numbers look right</div>
+
+            <div class="info-row">
+              <span>Fertilizer production</span>
+              <strong data-review="fertilizer-production">240 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Fertilizer usage</span>
+              <strong data-review="fertilizer-usage">180 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Pesticide production</span>
+              <strong data-review="pesticide-production">60 L</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Pesticide usage</span>
+              <strong data-review="pesticide-usage">42 L</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Harvest</span>
+              <strong data-review="harvest">1,280 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Self consumption</span>
+              <strong data-review="self-consumption">320 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Sold</span>
+              <strong data-review="sold">860 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Money from sale</span>
+              <strong data-review="money-from-sale">Rp 8,450,000</strong>
+            </div>
+          </section>
+
+          <section class="button-row">
+            <a class="button-primary" href="#report-sent">Send now</a>
+            <a class="button-secondary" href="#report-entry">Edit</a>
+          </section>
+
+          <a class="quiet-link" href="#">See old reports</a>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-item">Home</div>
+          <div class="nav-item active">Reports</div>
+          <div class="nav-item">Plans</div>
+          <div class="nav-item">Me</div>
+        </nav>
+      </div>
+    </section>
+
+    <section class="phone" id="report-sent">
+      <div class="phone-screen">
+        <section class="statusbar">
+          <span>09:49</span>
+          <span>4G • 90%</span>
+        </section>
+
+        <div class="content">
+          <section class="screen-intro">
+            <div class="header-row">
+              <div>
+                <div class="label">Report</div>
+                <h2 class="phone-title">Report sent</h2>
+              </div>
+            </div>
+          </section>
+
+          <section class="success-card">
+            <div class="success-mark">✓</div>
+            <div class="success-title">Your report was sent</div>
+            <p class="success-copy">The report is saved and Caritas staff can now see it in the dashboard.</p>
+          </section>
+
+          <section class="info-card">
+            <div class="label">Sent now</div>
+            <div class="field-value" style="font-size: 1.2rem; margin-top: 8px;">Summary</div>
+
+            <div class="info-row">
+              <span>Harvest</span>
+              <strong data-review="harvest">1,280 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Self consumption</span>
+              <strong data-review="self-consumption">320 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Sold</span>
+              <strong data-review="sold">860 kg</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Money from sale</span>
+              <strong data-review="money-from-sale">Rp 8,450,000</strong>
+            </div>
+          </section>
+
+          <section class="button-row">
+            <a class="button-primary" href="home.html">Back home</a>
+            <a class="button-secondary" href="report-form.html">New report</a>
+          </section>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-item">Home</div>
+          <div class="nav-item active">Reports</div>
+          <div class="nav-item">Plans</div>
+          <div class="nav-item">Me</div>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <script>
+    const numberFormatter = new Intl.NumberFormat("en-US");
+
+    function formatValue(fieldEl) {
+      const value = Number(fieldEl.dataset.value);
+      const prefix = fieldEl.dataset.prefix || "";
+      const unit = fieldEl.dataset.unit || "";
+      return `${prefix}${numberFormatter.format(value)}${unit}`;
+    }
+
+    function renderField(fieldEl) {
+      const fieldName = fieldEl.dataset.field;
+      const formatted = formatValue(fieldEl);
+      const displayEls = document.querySelectorAll(`[data-display="${fieldName}"]`);
+      const reviewEls = document.querySelectorAll(`[data-review="${fieldName}"]`);
+
+      displayEls.forEach((el) => {
+        el.textContent = formatted;
+      });
+
+      reviewEls.forEach((el) => {
+        el.textContent = formatted;
+      });
+    }
+
+    document.querySelectorAll(".field[data-field]").forEach((fieldEl) => {
+      renderField(fieldEl);
+
+      fieldEl.querySelectorAll("[data-action]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const currentValue = Number(fieldEl.dataset.value);
+          const step = Number(fieldEl.dataset.step);
+          const direction = button.dataset.action === "increase" ? 1 : -1;
+          const nextValue = Math.max(0, currentValue + (step * direction));
+
+          fieldEl.dataset.value = String(nextValue);
+          renderField(fieldEl);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Caritas Portal</title>
+  <style>
+    :root {
+      --caritas-red: #B10017;
+      --caritas-red-dark: #8F0012;
+      --caritas-beige: #EBE3D7;
+      --caritas-cream: #F9F6F3;
+      --caritas-text: #2C2C2C;
+      --caritas-green: #ADC679;
+      --caritas-blue: #60B4CD;
+      --caritas-white: #FFFFFF;
+      --caritas-border: rgba(44, 44, 44, 0.12);
+      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --header-h: 60px;
+      --gutter-w: 400px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--caritas-text);
+      background: #e8e0d4;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ── */
+    header {
+      height: var(--header-h);
+      background: var(--caritas-white);
+      border-bottom: 1px solid var(--caritas-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .brand-mark {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-name {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .brand-name small {
+      display: block;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(44, 44, 44, 0.5);
+      font-weight: 400;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.88rem;
+    }
+
+    .header-nav a {
+      color: rgba(44, 44, 44, 0.7);
+      transition: color 150ms;
+    }
+
+    .header-nav a:hover, .header-nav a.active {
+      color: var(--caritas-red);
+    }
+
+    .header-nav a.active {
+      font-weight: 600;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: var(--caritas-cream);
+      color: var(--caritas-text);
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--caritas-red);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    .btn-new-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.85rem;
+      background: var(--caritas-red);
+      color: white;
+      border-radius: var(--radius-pill);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(177,0,23,0.25);
+      transition: background 150ms;
+    }
+
+    .btn-new-location:hover { background: var(--caritas-red-dark); }
+
+    .btn-logout {
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(44, 44, 44, 0.6);
+      transition: all 150ms;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--caritas-red);
+      color: var(--caritas-red);
+    }
+
+    /* ── Body layout ── */
+    .body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Map area ── */
+    .map-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Placeholder map — replace with real @shadcn-map/map */
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 60% 55%, #b8d4e8 0%, #a8c4d8 30%, #8fb0c8 60%, #7a9db8 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Rough Indonesia island silhouette hint */
+    .map-island {
+      position: absolute;
+      background: #c8dfa0;
+      border-radius: 40% 60% 55% 45% / 45% 55% 60% 40%;
+      opacity: 0.85;
+    }
+
+    .island-java    { width: 280px; height: 70px; top: 52%; left: 30%; transform: rotate(-5deg); }
+    .island-sumatra { width: 200px; height: 55px; top: 44%; left: 14%; transform: rotate(-18deg); }
+    .island-borneo  { width: 160px; height: 140px; top: 38%; left: 46%; border-radius: 45%; }
+    .island-sulawesi { width: 80px; height: 120px; top: 36%; left: 60%; border-radius: 30% 70% 60% 40% / 50% 40% 60% 50%; transform: rotate(10deg); }
+    .island-papua   { width: 170px; height: 90px; top: 42%; left: 70%; border-radius: 35%; }
+
+    /* Markers */
+    .marker-wrap {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      cursor: pointer;
+    }
+
+    .marker-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--caritas-red);
+      border: 2.5px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      transition: transform 150ms, box-shadow 150ms;
+    }
+
+    .marker-wrap:hover .marker-dot,
+    .marker-wrap.active .marker-dot {
+      transform: scale(1.4);
+      box-shadow: 0 4px 14px rgba(177, 0, 23, 0.4);
+    }
+
+    .marker-wrap.active .marker-dot {
+      background: var(--caritas-red-dark);
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Hover tooltip */
+    .marker-tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid var(--caritas-border);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(44,44,44,0.14);
+      padding: 0.6rem 0.85rem;
+      min-width: 170px;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 140ms ease, visibility 140ms ease, transform 140ms ease;
+      transform: translateX(-50%) translateY(4px);
+      white-space: nowrap;
+    }
+
+    .marker-wrap:hover .marker-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Arrow pointing down */
+    .marker-tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: white;
+      filter: drop-shadow(0 1px 1px rgba(44,44,44,0.08));
+    }
+
+    .tooltip-name {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--caritas-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .tooltip-meta {
+      font-size: 0.75rem;
+      color: rgba(44,44,44,0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .tooltip-meta span { display: block; }
+
+    /* Marker positions (approximate Indonesia locations) */
+    .m1  { top: 53%; left: 33%; }
+    .m2  { top: 56%; left: 37%; }
+    .m3  { top: 51%; left: 41%; }
+    .m4  { top: 54%; left: 45%; }
+    .m5  { top: 52%; left: 48%; }
+    .m6  { top: 47%; left: 50%; }
+    .m7  { top: 49%; left: 55%; }
+    .m8  { top: 53%; left: 58%; }
+    .m9  { top: 44%; left: 62%; }
+    .m10 { top: 46%; left: 67%; }
+    .m11 { top: 43%; left: 73%; }
+    .m12 { top: 48%; left: 78%; }
+
+    .map-bottom-left {
+      position: absolute;
+      bottom: 1.2rem;
+      left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .map-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.5);
+      background: rgba(255,255,255,0.7);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-pill);
+      backdrop-filter: blur(6px);
+    }
+
+    /* Map controls */
+    .map-controls {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      z-index: 10;
+    }
+
+    .map-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--caritas-border);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      color: var(--caritas-text);
+      transition: background 150ms;
+    }
+
+    .map-btn:hover { background: var(--caritas-cream); }
+
+    /* ── Gutter ── */
+    .gutter {
+      width: var(--gutter-w);
+      flex-shrink: 0;
+      background: var(--caritas-white);
+      border-left: 1px solid var(--caritas-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .gutter-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      color: rgba(44,44,44,0.4);
+      gap: 0.75rem;
+    }
+
+    .gutter-empty-icon {
+      font-size: 2.5rem;
+      opacity: 0.4;
+    }
+
+    .gutter-empty p {
+      font-size: 0.9rem;
+      max-width: 22ch;
+      line-height: 1.5;
+    }
+
+    /* Shown when a village is selected */
+    .gutter-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .gutter-top {
+      position: relative;
+      min-height: 160px;
+      padding: 1.25rem 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--caritas-border);
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.55) 100%),
+        url("https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=800&q=80") center/cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .gutter-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 0.4rem;
+    }
+
+    .gutter-village-name {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: white;
+      margin-bottom: 0.3rem;
+    }
+
+    .gutter-meta {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .gutter-close {
+      position: absolute;
+      top: 0.9rem;
+      right: 0.9rem;
+      background: rgba(0,0,0,0.3);
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      padding: 0.3rem 0.55rem;
+      border-radius: 8px;
+      line-height: 1;
+      backdrop-filter: blur(4px);
+      transition: background 150ms;
+    }
+
+    .gutter-close:hover {
+      background: rgba(177,0,23,0.6);
+      color: white;
+    }
+
+    .gutter-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--caritas-border);
+    }
+
+    .gutter-stat {
+      background: var(--caritas-cream);
+      border-radius: 14px;
+      padding: 0.9rem;
+      border: 1px solid var(--caritas-border);
+    }
+
+    .gutter-stat-value {
+      font-family: Athelas, "Iowan Old Style", Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--caritas-red);
+      line-height: 1;
+    }
+
+    .gutter-stat-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.55);
+      margin-top: 0.3rem;
+    }
+
+    .gutter-section {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--caritas-border);
+    }
+
+    .gutter-section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,0.5);
+      margin-bottom: 0.85rem;
+    }
+
+    .gutter-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(44,44,44,0.05);
+    }
+
+    .gutter-row:last-child { border-bottom: none; }
+
+    .gutter-row-label { color: rgba(44,44,44,0.65); }
+    .gutter-row-value { font-weight: 600; }
+
+    .gutter-footer {
+      padding: 1.25rem;
+      margin-top: auto;
+    }
+
+    .btn-view-village {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 46px;
+      padding: 0.75rem 1.25rem;
+      background: var(--caritas-red);
+      color: white;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 150ms;
+    }
+
+    .btn-view-village:hover { background: var(--caritas-red-dark); }
+
+    .btn-view-village span {
+      margin-left: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img class="brand-mark" src="../assets/caritas_internationalis_logo.jpeg" alt="Caritas Internationalis" />
+      <div class="brand-name">
+        Caritas Portal
+        <small>Field Impact Dashboard</small>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="not-implemented.html">About</a>
+      <a href="not-implemented.html">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="user-pill">
+        <div class="user-avatar">AJ</div>
+        Ana Juárez &nbsp;·&nbsp; Admin
+      </div>
+      <a href="login.html" class="btn-logout">Sign out</a>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Map -->
+    <div class="map-area">
+      <div class="map-placeholder">
+
+        <!-- Island shapes -->
+        <div class="map-island island-sumatra"></div>
+        <div class="map-island island-java"></div>
+        <div class="map-island island-borneo"></div>
+        <div class="map-island island-sulawesi"></div>
+        <div class="map-island island-papua"></div>
+
+        <!-- Village markers -->
+        <div class="marker-wrap m1">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Sukamaju</div>
+            <div class="tooltip-meta">
+              <span>187 mobile users</span>
+              <span>Last report: 8 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m2">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Harapan</div>
+            <div class="tooltip-meta">
+              <span>213 mobile users</span>
+              <span>Last report: 2 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m3">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Mekar</div>
+            <div class="tooltip-meta">
+              <span>142 mobile users</span>
+              <span>Last report: 20 Mar 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m4 active">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Ende</div>
+            <div class="tooltip-meta">
+              <span>247 mobile users</span>
+              <span>Last report: 14 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m5">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Makmur</div>
+            <div class="tooltip-meta">
+              <span>198 mobile users</span>
+              <span>Last report: 11 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m6">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Damai</div>
+            <div class="tooltip-meta">
+              <span>165 mobile users</span>
+              <span>Last report: 5 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m7">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Maju</div>
+            <div class="tooltip-meta">
+              <span>231 mobile users</span>
+              <span>Last report: 17 Mar 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m8">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Sejahtera</div>
+            <div class="tooltip-meta">
+              <span>179 mobile users</span>
+              <span>Last report: 1 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m9">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Lestari</div>
+            <div class="tooltip-meta">
+              <span>204 mobile users</span>
+              <span>Last report: 9 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m10">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Baru</div>
+            <div class="tooltip-meta">
+              <span>156 mobile users</span>
+              <span>Last report: 22 Mar 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m11">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Subur</div>
+            <div class="tooltip-meta">
+              <span>189 mobile users</span>
+              <span>Last report: 13 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="marker-wrap m12">
+          <div class="marker-dot"></div>
+          <div class="marker-tooltip">
+            <div class="tooltip-name">Desa Timur</div>
+            <div class="tooltip-meta">
+              <span>221 mobile users</span>
+              <span>Last report: 6 Apr 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-bottom-left">
+          <div class="map-label">Indonesia · 12 villages</div>
+          <a class="btn-new-location" href="not-implemented.html">+ New location</a>
+        </div>
+      </div>
+
+      <!-- Map zoom controls (locked, so these are decorative) -->
+      <div class="map-controls">
+        <button class="map-btn" title="Zoom in">+</button>
+        <button class="map-btn" title="Zoom out">−</button>
+      </div>
+    </div>
+
+    <!-- Gutter — shown when a village marker is selected -->
+    <aside class="gutter">
+
+      <!--
+        EMPTY STATE (shown when no village is selected — toggle display to show/hide):
+        <div class="gutter-empty">
+          <div class="gutter-empty-icon">📍</div>
+          <p>Select a village on the map to view its summary</p>
+        </div>
+      -->
+
+      <!-- SELECTED STATE -->
+      <div class="gutter-content">
+        <div class="gutter-top">
+          <button class="gutter-close" title="Close">✕</button>
+          <div class="gutter-eyebrow">Flores, East Nusa Tenggara</div>
+          <div class="gutter-village-name">Ende</div>
+          <div class="gutter-meta">Last report: 14 April 2026</div>
+        </div>
+
+        <div class="gutter-stats">
+          <div class="gutter-stat">
+            <div class="gutter-stat-value">247</div>
+            <div class="gutter-stat-label">Mobile users</div>
+          </div>
+          <div class="gutter-stat">
+            <div class="gutter-stat-value">18.4 t</div>
+            <div class="gutter-stat-label">Total yield</div>
+          </div>
+          <div class="gutter-stat">
+            <div class="gutter-stat-value">Rp 42 M</div>
+            <div class="gutter-stat-label">Total profit</div>
+          </div>
+          <div class="gutter-stat">
+            <div class="gutter-stat-value">6</div>
+            <div class="gutter-stat-label">Reports filed</div>
+          </div>
+        </div>
+
+        <div class="gutter-section">
+          <div class="gutter-section-title">Latest report snapshot</div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Yield</span>
+            <span class="gutter-row-value">3.2 tonnes</span>
+          </div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Self consumption</span>
+            <span class="gutter-row-value">0.8 tonnes</span>
+          </div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Profit</span>
+            <span class="gutter-row-value">Rp 7.4 M</span>
+          </div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Fertilizer used</span>
+            <span class="gutter-row-value">120 kg</span>
+          </div>
+        </div>
+
+        <div class="gutter-section">
+          <div class="gutter-section-title">Current planting</div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Crop</span>
+            <span class="gutter-row-value">Rice (Padi)</span>
+          </div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Planted</span>
+            <span class="gutter-row-value">Feb 2026</span>
+          </div>
+          <div class="gutter-row">
+            <span class="gutter-row-label">Expected harvest</span>
+            <span class="gutter-row-value">May 2026</span>
+          </div>
+        </div>
+
+        <div class="gutter-footer">
+          <a class="btn-view-village" href="village.html">
+            View village detail <span>→</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /body -->
+
+</body>
+</html>
