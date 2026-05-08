@@ -181,31 +181,23 @@
       overflow: hidden;
     }
 
-    /* Placeholder map — replace with real @shadcn-map/map */
     .map-placeholder {
       width: 100%;
       height: 100%;
-      background:
-        radial-gradient(ellipse at 60% 55%, #b8d4e8 0%, #a8c4d8 30%, #8fb0c8 60%, #7a9db8 100%);
+      background: #dae6ed;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Rough Indonesia island silhouette hint */
-    .map-island {
+    .map-svg {
       position: absolute;
-      background: #c8dfa0;
-      border-radius: 40% 60% 55% 45% / 45% 55% 60% 40%;
-      opacity: 0.85;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
-
-    .island-java    { width: 280px; height: 70px; top: 52%; left: 30%; transform: rotate(-5deg); }
-    .island-sumatra { width: 200px; height: 55px; top: 44%; left: 14%; transform: rotate(-18deg); }
-    .island-borneo  { width: 160px; height: 140px; top: 38%; left: 46%; border-radius: 45%; }
-    .island-sulawesi { width: 80px; height: 120px; top: 36%; left: 60%; border-radius: 30% 70% 60% 40% / 50% 40% 60% 50%; transform: rotate(10deg); }
-    .island-papua   { width: 170px; height: 90px; top: 42%; left: 70%; border-radius: 35%; }
 
     /* Markers */
     .marker-wrap {
@@ -293,19 +285,19 @@
 
     .tooltip-meta span { display: block; }
 
-    /* Marker positions (approximate Indonesia locations) */
-    .m1  { top: 53%; left: 33%; }
-    .m2  { top: 56%; left: 37%; }
-    .m3  { top: 51%; left: 41%; }
-    .m4  { top: 54%; left: 45%; }
-    .m5  { top: 52%; left: 48%; }
-    .m6  { top: 47%; left: 50%; }
-    .m7  { top: 49%; left: 55%; }
-    .m8  { top: 53%; left: 58%; }
-    .m9  { top: 44%; left: 62%; }
-    .m10 { top: 46%; left: 67%; }
-    .m11 { top: 43%; left: 73%; }
-    .m12 { top: 48%; left: 78%; }
+    /* Marker positions (East Nusa Tenggara) */
+    .m1  { top: 34%; left: 21%; }   /* W Flores */
+    .m2  { top: 33%; left: 32%; }   /* Flores */
+    .m3  { top: 33%; left: 37%; }   /* near Bajawa */
+    .m4  { top: 37%; left: 46%; }   /* Ende */
+    .m5  { top: 34%; left: 51%; }   /* Flores */
+    .m6  { top: 31%; left: 55%; }   /* near Maumere */
+    .m7  { top: 58%; left: 15%; }   /* Sumba W */
+    .m8  { top: 56%; left: 25%; }   /* Sumba E */
+    .m9  { top: 66%; left: 73%; }   /* Kupang */
+    .m10 { top: 59%; left: 82%; }   /* Timor */
+    .m11 { top: 59%; left: 88%; }   /* Timor */
+    .m12 { top: 25%; left: 73%; }   /* Lembata */
 
     .map-bottom-left {
       position: absolute;
@@ -583,12 +575,83 @@
     <div class="map-area">
       <div class="map-placeholder">
 
-        <!-- Island shapes -->
-        <div class="map-island island-sumatra"></div>
-        <div class="map-island island-java"></div>
-        <div class="map-island island-borneo"></div>
-        <div class="map-island island-sulawesi"></div>
-        <div class="map-island island-papua"></div>
+        <!-- East Nusa Tenggara SVG map -->
+        <svg class="map-svg" viewBox="0 0 1200 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="1200" height="800" fill="#dae6ed"/>
+
+          <!-- Subtle grid -->
+          <line x1="0" y1="200" x2="1200" y2="200" stroke="rgba(44,44,44,0.035)" stroke-width="0.5" stroke-dasharray="6,10"/>
+          <line x1="0" y1="400" x2="1200" y2="400" stroke="rgba(44,44,44,0.035)" stroke-width="0.5" stroke-dasharray="6,10"/>
+          <line x1="0" y1="600" x2="1200" y2="600" stroke="rgba(44,44,44,0.035)" stroke-width="0.5" stroke-dasharray="6,10"/>
+          <line x1="300" y1="0" x2="300" y2="800" stroke="rgba(44,44,44,0.035)" stroke-width="0.5" stroke-dasharray="6,10"/>
+          <line x1="600" y1="0" x2="600" y2="800" stroke="rgba(44,44,44,0.035)" stroke-width="0.5" stroke-dasharray="6,10"/>
+          <line x1="900" y1="0" x2="900" y2="800" stroke="rgba(44,44,44,0.035)" stroke-width="0.5" stroke-dasharray="6,10"/>
+
+          <!-- Islands -->
+          <g>
+            <!-- Flores -->
+            <path d="M165,283 C185,265 225,253 275,251 C325,247 370,253 420,259 C460,253 495,251 535,263 C570,257 610,245 650,240 C695,230 730,220 758,209 C775,213 778,225 768,237 C755,250 735,260 710,267 C680,275 645,283 610,287 C580,297 555,307 540,313 C525,317 510,313 495,303 C465,297 435,295 400,293 C360,291 320,289 280,287 C240,289 200,291 178,287 C165,285 162,283 165,283Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Sumba -->
+            <path d="M108,465 C130,443 175,423 230,417 C280,413 325,417 365,430 C395,440 405,457 395,473 C380,490 345,500 300,503 C255,505 210,497 170,485 C135,475 110,470 108,465Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Timor (western half) -->
+            <path d="M830,505 C850,480 890,455 935,440 C975,430 1015,435 1050,450 C1085,465 1110,485 1125,510 C1135,530 1120,550 1095,560 C1060,570 1015,570 975,563 C940,557 905,545 875,533 C845,523 830,515 830,505Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Solor -->
+            <path d="M780,233 C790,227 808,223 820,227 C832,231 835,240 825,245 C815,250 795,247 785,241 C778,237 778,235 780,233Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Adonara -->
+            <path d="M800,207 C812,200 830,197 842,203 C852,209 850,220 840,225 C828,230 810,227 800,220 C792,213 794,209 800,207Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Lembata -->
+            <path d="M848,197 C862,187 885,183 900,190 C912,197 910,210 898,217 C885,223 865,220 852,211 C843,203 844,199 848,197Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Pantar -->
+            <path d="M940,180 C955,170 975,167 988,175 C998,183 995,195 985,203 C972,209 955,205 945,195 C938,187 936,183 940,180Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Alor -->
+            <path d="M1000,167 C1020,155 1050,151 1075,160 C1095,169 1100,187 1088,200 C1072,213 1045,215 1022,205 C1002,195 995,180 1000,167Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Rote -->
+            <path d="M842,593 C860,583 888,580 908,587 C922,593 920,605 908,611 C892,617 865,617 848,609 C838,603 836,597 842,593Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+
+            <!-- Sabu -->
+            <path d="M580,570 C594,563 615,561 628,567 C638,573 635,583 624,589 C610,595 592,593 582,585 C575,578 575,573 580,570Z"
+              fill="#ede7dc" stroke="rgba(44,44,44,0.1)" stroke-width="0.8"/>
+          </g>
+
+          <!-- City labels -->
+          <g font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" fill="rgba(44,44,44,0.45)">
+            <text x="340" y="268" text-anchor="middle">Ruteng</text>
+            <text x="446" y="252" text-anchor="middle">Bajawa</text>
+            <text x="501" y="250" text-anchor="middle">Mbay</text>
+            <text x="555" y="284" text-anchor="middle">Ende</text>
+            <text x="660" y="234" text-anchor="middle">Maumere</text>
+            <text x="758" y="204" text-anchor="middle">Larantuka</text>
+            <text x="300" y="448" text-anchor="middle">Waingapu</text>
+            <text x="895" y="519" text-anchor="middle">Kupang</text>
+            <text x="1010" y="462" text-anchor="middle">Soe</text>
+            <text x="1050" y="160" text-anchor="middle">Kalabahi</text>
+          </g>
+
+          <!-- Province label -->
+          <text x="430" y="360" font-family="Athelas, 'Iowan Old Style', Georgia, serif" font-size="16" fill="rgba(44,44,44,0.18)" letter-spacing="0.15em">East Nusa Tenggara</text>
+
+          <!-- Sea labels -->
+          <text x="380" y="170" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10" fill="rgba(44,44,44,0.12)" font-style="italic" letter-spacing="0.35em">FLORES SEA</text>
+          <text x="550" y="430" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10" fill="rgba(44,44,44,0.12)" font-style="italic" letter-spacing="0.35em">SAVU SEA</text>
+          <text x="850" y="680" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10" fill="rgba(44,44,44,0.12)" font-style="italic" letter-spacing="0.35em">TIMOR SEA</text>
+        </svg>
 
         <!-- Village markers -->
         <div class="marker-wrap m1">
@@ -724,7 +787,7 @@
         </div>
 
         <div class="map-bottom-left">
-          <div class="map-label">Indonesia · 12 villages</div>
+          <div class="map-label">East Nusa Tenggara · 12 villages</div>
           <a class="btn-new-location" href="not-implemented.html">+ New location</a>
         </div>
       </div>
