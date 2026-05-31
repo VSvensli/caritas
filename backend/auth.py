@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -17,7 +17,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+bearer_scheme = HTTPBearer()
 
 
 def hash_password(password: str) -> str:
@@ -77,10 +77,10 @@ def _decode_token(token: str, expected_type: str) -> dict:
 
 
 def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)],
+    credentials: Annotated[HTTPAuthorizationCredentials, Depends(bearer_scheme)],
     db: Annotated[Session, Depends(get_db)],
 ) -> User:
-    payload = _decode_token(token, "access")
+    payload = _decode_token(credentials.credentials, "access")
     user = db.get(User, payload["sub"])
     if user is None:
         raise HTTPException(

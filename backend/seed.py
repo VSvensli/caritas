@@ -9,7 +9,7 @@ from backend.auth import hash_password, hash_pin
 from backend.database import Base, SessionLocal, engine
 from backend.models.calendar import SubTask, Task
 from backend.models.report import Report
-from backend.models.user import Role, User
+from backend.models.user import Gender, Role, User
 from backend.models.village import Village
 from backend.routers.villages import _slugify
 
@@ -62,6 +62,7 @@ def seed():
                 hashed_pin=hash_pin(u["pin"]),
                 role=Role.reporter,
                 village_id=village.id,
+                gender=Gender(u["gender"]) if u.get("gender") else None,
             )
             db.add(user)
             reporter_ids.append(user.id)

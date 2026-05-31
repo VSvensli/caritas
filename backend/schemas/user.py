@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, field_validator
 
-from backend.models.user import Role
+from backend.models.user import Gender, Role
 
 
 class DashboardUserCreate(BaseModel):
@@ -10,6 +10,8 @@ class DashboardUserCreate(BaseModel):
     full_name: str
     password: str
     role: Role = Role.viewer
+    gender: Gender | None = None
+    image_url: str | None = None
 
     @field_validator("role")
     @classmethod
@@ -24,6 +26,8 @@ class VillageUserCreate(BaseModel):
     full_name: str
     pin: str
     village_id: str
+    gender: Gender | None = None
+    image_url: str | None = None
 
     @field_validator("pin")
     @classmethod
@@ -39,6 +43,8 @@ class UserRead(BaseModel):
     phone_number: str | None
     full_name: str
     role: Role
+    gender: Gender | None
+    image_url: str | None
     village_id: str | None
     created_at: datetime
 

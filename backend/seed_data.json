@@ -22,14 +22,14 @@
   "reporters": {
     "village": "Ende",
     "users": [
-      {"phone_number": "+6281001", "full_name": "Budi Santoso", "pin": "1234"},
-      {"phone_number": "+6281002", "full_name": "Siti Rahayu", "pin": "1234"},
-      {"phone_number": "+6281003", "full_name": "Ahmad Wijaya", "pin": "1234"},
-      {"phone_number": "+6281004", "full_name": "Dewi Kusuma", "pin": "1234"},
-      {"phone_number": "+6281005", "full_name": "Hendra Putra", "pin": "1234"},
-      {"phone_number": "+6281006", "full_name": "Rina Marlina", "pin": "1234"},
-      {"phone_number": "+6281007", "full_name": "Joko Susilo", "pin": "1234"},
-      {"phone_number": "+6281008", "full_name": "Nurul Hidayah", "pin": "1234"}
+      {"phone_number": "+6281001", "full_name": "Budi Santoso", "pin": "1234", "gender": "male"},
+      {"phone_number": "+6281002", "full_name": "Siti Rahayu", "pin": "1234", "gender": "female"},
+      {"phone_number": "+6281003", "full_name": "Ahmad Wijaya", "pin": "1234", "gender": "male"},
+      {"phone_number": "+6281004", "full_name": "Dewi Kusuma", "pin": "1234", "gender": "female"},
+      {"phone_number": "+6281005", "full_name": "Hendra Putra", "pin": "1234", "gender": "male"},
+      {"phone_number": "+6281006", "full_name": "Rina Marlina", "pin": "1234", "gender": "female"},
+      {"phone_number": "+6281007", "full_name": "Joko Susilo", "pin": "1234", "gender": "male"},
+      {"phone_number": "+6281008", "full_name": "Nurul Hidayah", "pin": "1234", "gender": "female"}
     ]
   },
   "reports": {

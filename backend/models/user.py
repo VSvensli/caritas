@@ -12,6 +12,12 @@ if TYPE_CHECKING:
     from backend.models.village import Village
 
 
+class Gender(str, enum.Enum):
+    male = "male"
+    female = "female"
+    other = "other"
+
+
 class Role(str, enum.Enum):
     admin = "admin"
     editor = "editor"
@@ -35,6 +41,8 @@ class User(Base):
     )
     hashed_pin: Mapped[str | None] = mapped_column(String(255), nullable=True)
     role: Mapped[Role] = mapped_column(Enum(Role), default=Role.viewer)
+    gender: Mapped[Gender | None] = mapped_column(Enum(Gender), nullable=True)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     village_id: Mapped[str | None] = mapped_column(
         String(36), ForeignKey("villages.id"), nullable=True
     )

@@ -35,6 +35,8 @@ def create_dashboard_user(
         full_name=body.full_name,
         hashed_password=hash_password(body.password),
         role=body.role,
+        gender=body.gender,
+        image_url=body.image_url,
     )
     db.add(new_user)
     db.commit()
@@ -61,6 +63,8 @@ def create_village_user(
         hashed_pin=hash_pin(body.pin),
         role=Role.reporter,
         village_id=body.village_id,
+        gender=body.gender,
+        image_url=body.image_url,
     )
     db.add(new_user)
     db.commit()

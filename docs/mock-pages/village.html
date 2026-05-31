@@ -582,12 +582,15 @@
         <div class="card-header">
           <span class="card-title">Reporters</span>
           <span class="card-badge" id="reporter-count-badge">—</span>
+          <span class="card-badge" id="reporter-gender-badge">—</span>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
+                <th></th>
                 <th>Name</th>
+                <th>Gender</th>
                 <th>Phone</th>
               </tr>
             </thead>
@@ -720,13 +723,28 @@
 
       // Reporters table
       document.getElementById('reporter-count-badge').textContent = reporters.length + ' registered';
+      const maleCount = reporters.filter(r => r.gender === 'male').length;
+      const femaleCount = reporters.filter(r => r.gender === 'female').length;
+      const otherCount = reporters.filter(r => r.gender && r.gender !== 'male' && r.gender !== 'female').length;
+      const parts = [];
+      if (maleCount) parts.push(maleCount + ' male');
+      if (femaleCount) parts.push(femaleCount + ' female');
+      if (otherCount) parts.push(otherCount + ' other');
+      document.getElementById('reporter-gender-badge').textContent = parts.join(' · ') || '—';
+
       const reporterTbody = document.getElementById('reporter-tbody');
-      reporterTbody.innerHTML = reporters.map(r =>
-        '<tr>' +
+      reporterTbody.innerHTML = reporters.map(r => {
+        const initials = r.full_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const avatar = r.image_url
+          ? '<img src="' + r.image_url + '" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">'
+          : '<div style="width:32px;height:32px;border-radius:50%;background:var(--caritas-red);color:white;display:grid;place-items:center;font-size:0.7rem;font-weight:700;">' + initials + '</div>';
+        return '<tr>' +
+          '<td style="width:48px;padding-right:0;">' + avatar + '</td>' +
           '<td class="td-value">' + r.full_name + '</td>' +
+          '<td class="td-muted">' + (r.gender || '—') + '</td>' +
           '<td class="td-muted">' + (r.phone_number || '—') + '</td>' +
-        '</tr>'
-      ).join('');
+        '</tr>';
+      }).join('');
     }
 
     init();
