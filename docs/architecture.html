@@ -1322,7 +1322,7 @@
   <a href="../index.html" class="back-link">&larr; Back to mocks</a>
   <div class="hero-eyebrow">Technical Architecture</div>
   <h1>Caritas HARVEST</h1>
-  <p class="hero-desc">Web portal and Android app for an aid organisation tracking agricultural impact across ~20 Indonesian villages. Data is submitted from a native Android app used by village workers and viewed by organisation staff through a web dashboard. Real-time chat with image sharing connects field workers and staff.</p>
+  <p class="hero-desc">Web portal and mobile-friendly web app for an aid organisation tracking agricultural impact across ~20 Indonesian villages. Data is submitted from a mobile web app used by village workers and viewed by organisation staff through a web dashboard. Real-time chat with image sharing connects field workers and staff.</p>
 </div>
 
 <div class="content">
@@ -1331,7 +1331,7 @@
   <section id="overview">
     <div class="section-label">System Overview</div>
     <h2>How it all fits together</h2>
-    <p class="section-intro">One FastAPI backend serves both the web and Android clients through a shared REST API and WebSocket endpoint. Nginx sits in front as a reverse proxy with TLS termination, and also serves images directly.</p>
+    <p class="section-intro">One FastAPI backend serves both the staff dashboard and the mobile web app through a shared REST API and WebSocket endpoint. Nginx sits in front as a reverse proxy with TLS termination, and also serves images directly.</p>
 
     <div class="arch-diagram animate-in delay-1">
       <div class="overview-arch">
@@ -1344,9 +1344,9 @@
         </div>
         <div class="arch-node">
           <div class="arch-node-icon icon-green">M</div>
-          <h4>Android App</h4>
-          <p>Native Kotlin app for village reporters. Offline-first with Room DB, sync queue, and OkHttp WebSocket for real-time chat.</p>
-          <span class="tech-tag tag-green">Kotlin + Room + OkHttp WS</span>
+          <h4>Mobile Web App</h4>
+          <p>Mobile-friendly web app for village reporters. Offline-capable with Service Worker and IndexedDB, sync queue, and native WebSocket for real-time chat.</p>
+          <span class="tech-tag tag-green">PWA + IndexedDB + WebSocket</span>
         </div>
 
         <!-- Flow arrows -->
@@ -1412,7 +1412,7 @@
   <section id="auth">
     <div class="section-label">Authentication</div>
     <h2>Users, roles & access</h2>
-    <p class="section-intro">Two distinct user populations with different auth flows. Admin creates all accounts via the web portal. Mobile credentials are handed out in person during training.</p>
+    <p class="section-intro">Two distinct user populations with different auth flows. Admin creates all accounts via the staff dashboard. Mobile credentials are handed out in person during training.</p>
 
     <div class="role-grid animate-in delay-1">
       <div class="role-card">
@@ -1456,13 +1456,13 @@
       <div class="role-card">
         <div class="role-card-header">
           <span class="role-badge tag-beige">Reporter</span>
-          <span class="role-platform">Android App</span>
+          <span class="role-platform">Mobile Web App</span>
         </div>
         <ul>
           <li>Submit reports for own village</li>
           <li>View own village schedule</li>
           <li>Scoped by <code>village_id</code> JWT claim</li>
-          <li>Works offline, syncs when connected</li>
+          <li>Works offline via Service Worker, syncs when connected</li>
           <li>Chat with staff, send images</li>
         </ul>
       </div>
@@ -1563,21 +1563,21 @@
   <section id="sync">
     <div class="section-label">Sync Strategy</div>
     <h2>Mobile &harr; Backend</h2>
-    <p class="section-intro">The Android app handles two directions of data flow. Reports push up when connectivity is available; schedules pull down on launch and periodic intervals.</p>
+    <p class="section-intro">The mobile web app handles two directions of data flow. Reports push up when connectivity is available; schedules pull down on launch and periodic intervals.</p>
 
     <div class="sync-container animate-in delay-1">
       <div class="sync-card push">
         <div class="sync-direction push">&#9650; Push</div>
         <h3>Reporter &rarr; Cloud</h3>
-        <p>Reports created offline are queued in the local Room database and synced when network becomes available.</p>
+        <p>Reports created offline are queued in IndexedDB and synced when network becomes available.</p>
         <ol class="sync-steps">
           <li class="sync-step">
             <span class="step-dot">1</span>
-            <span class="step-text">Report created offline, stored in Room DB sync queue</span>
+            <span class="step-text">Report created offline, stored in IndexedDB sync queue</span>
           </li>
           <li class="sync-step">
             <span class="step-dot">2</span>
-            <span class="step-text">WorkManager job fires when network is available</span>
+            <span class="step-text">Service Worker fires when network is available</span>
           </li>
           <li class="sync-step">
             <span class="step-dot">3</span>
@@ -1592,7 +1592,7 @@
       <div class="sync-card pull">
         <div class="sync-direction pull">&#9660; Pull</div>
         <h3>Cloud &rarr; Reporter</h3>
-        <p>Schedules managed by staff in the web app are polled on launch and every ~30 minutes.</p>
+        <p>Schedules managed by staff in the dashboard are polled on launch and every ~30 minutes.</p>
         <ol class="sync-steps">
           <li class="sync-step">
             <span class="step-dot">1</span>
@@ -1604,7 +1604,7 @@
           </li>
           <li class="sync-step">
             <span class="step-dot">3</span>
-            <span class="step-text">Incremental updates stored in Room DB for offline viewing</span>
+            <span class="step-text">Incremental updates stored in IndexedDB for offline viewing</span>
           </li>
         </ol>
       </div>
@@ -1636,13 +1636,13 @@
   <section id="wire">
     <div class="section-label">Wire Protocols</div>
     <h2>REST + WebSocket</h2>
-    <p class="section-intro">Both clients use the same REST endpoints and the same WebSocket protocol. The backend doesn't know or care which client is connected.</p>
+    <p class="section-intro">Both the staff dashboard and mobile web app use the same REST endpoints and the same WebSocket protocol. The backend doesn't know or care which client is connected.</p>
 
     <div class="protocol-split animate-in delay-1">
       <div class="protocol-card">
         <div class="protocol-badge badge-rest">REST over HTTPS</div>
         <h3>Request / Response</h3>
-        <p>Standard REST for auth, CRUD operations, paginated history, and image upload/serving. JWT carried as Bearer token (Android) or httpOnly cookie (web).</p>
+        <p>Standard REST for auth, CRUD operations, paginated history, and image upload/serving. JWT carried as Bearer token in both clients.</p>
         <div class="api-endpoints" style="margin-top: 0.5rem;">
           <div class="api-row">
             <span class="method method-post">POST</span>
@@ -2338,6 +2338,22 @@
       <div class="migration-step">
         <h4>4. Monitoring</h4>
         <p>Prometheus + Loki + Grafana run anywhere, or swap for managed equivalents like CloudWatch or Grafana Cloud.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ SHELVED IDEAS ═══ -->
+  <section id="shelved">
+    <div class="section-label">Archive</div>
+    <h2>Shelved ideas</h2>
+    <p class="section-intro">Ideas that were considered but set aside. They may be revisited if requirements change.</p>
+
+    <div class="decisions-grid animate-in delay-1">
+      <div class="decision-card">
+        <h4>Native Android App</h4>
+        <p>Originally planned as a Kotlin app with Room DB for offline storage and OkHttp WebSocket. Shelved in favour of a mobile-friendly PWA to reduce development and maintenance overhead, avoid Play Store distribution, and allow a single web codebase for both clients.</p>
       </div>
     </div>
   </section>

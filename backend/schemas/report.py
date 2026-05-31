@@ -9,7 +9,7 @@ class ReportCreate(BaseModel):
     yield_kg: float | None = None
     self_consumption_kg: float | None = None
     sold_kg: float | None = None
-    revenue: int | None = None
+    revenue_idr: int | None = None
     fertilizer_produced_kg: float | None = None
     fertilizer_used_kg: float | None = None
     pesticide_produced_l: float | None = None
@@ -25,7 +25,7 @@ class ReportRead(BaseModel):
     yield_kg: float | None
     self_consumption_kg: float | None
     sold_kg: float | None
-    revenue: int | None
+    revenue_idr: int | None
     fertilizer_produced_kg: float | None
     fertilizer_used_kg: float | None
     pesticide_produced_l: float | None
@@ -41,7 +41,7 @@ class ReportSummary(BaseModel):
     total_yield_kg: float
     total_self_consumption_kg: float
     total_sold_kg: float
-    total_revenue: int
+    total_revenue_idr: int
     total_fertilizer_produced_kg: float
     total_fertilizer_used_kg: float
     total_pesticide_produced_l: float

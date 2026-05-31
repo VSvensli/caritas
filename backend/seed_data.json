@@ -1,0 +1,115 @@
+{
+  "admin": {
+    "email": "ana@caritas.org",
+    "full_name": "Ana Juárez",
+    "password": "admin123",
+    "role": "admin"
+  },
+  "villages": [
+    {"name": "Desa Sukamaju", "latitude": -8.56, "longitude": 120.05, "population": 187},
+    {"name": "Desa Harapan", "latitude": -8.55, "longitude": 120.80, "population": 213},
+    {"name": "Desa Mekar", "latitude": -8.55, "longitude": 121.15, "population": 142},
+    {"name": "Ende", "latitude": -8.8432, "longitude": 121.6637, "population": 247},
+    {"name": "Desa Makmur", "latitude": -8.56, "longitude": 121.95, "population": 198},
+    {"name": "Desa Damai", "latitude": -8.48, "longitude": 122.25, "population": 165},
+    {"name": "Desa Maju", "latitude": -9.43, "longitude": 119.55, "population": 231},
+    {"name": "Desa Sejahtera", "latitude": -9.35, "longitude": 120.40, "population": 179},
+    {"name": "Desa Lestari", "latitude": -10.17, "longitude": 123.60, "population": 204},
+    {"name": "Desa Baru", "latitude": -9.80, "longitude": 124.20, "population": 156},
+    {"name": "Desa Subur", "latitude": -9.80, "longitude": 124.60, "population": 189},
+    {"name": "Desa Timur", "latitude": -8.30, "longitude": 123.60, "population": 221}
+  ],
+  "reporters": {
+    "village": "Ende",
+    "users": [
+      {"phone_number": "+6281001", "full_name": "Budi Santoso", "pin": "1234"},
+      {"phone_number": "+6281002", "full_name": "Siti Rahayu", "pin": "1234"},
+      {"phone_number": "+6281003", "full_name": "Ahmad Wijaya", "pin": "1234"},
+      {"phone_number": "+6281004", "full_name": "Dewi Kusuma", "pin": "1234"},
+      {"phone_number": "+6281005", "full_name": "Hendra Putra", "pin": "1234"},
+      {"phone_number": "+6281006", "full_name": "Rina Marlina", "pin": "1234"},
+      {"phone_number": "+6281007", "full_name": "Joko Susilo", "pin": "1234"},
+      {"phone_number": "+6281008", "full_name": "Nurul Hidayah", "pin": "1234"}
+    ]
+  },
+  "reports": {
+    "village": "Ende",
+    "entries": [
+      {
+        "reported_at": "2026-04-14T00:00:00Z",
+        "yield_kg": 3200, "self_consumption_kg": 800, "sold_kg": 2400,
+        "revenue_idr": 7400000,
+        "fertilizer_used_kg": 120, "fertilizer_produced_kg": 45,
+        "pesticide_used_l": 18, "pesticide_produced_l": null
+      },
+      {
+        "reported_at": "2026-01-18T00:00:00Z",
+        "yield_kg": 2900, "self_consumption_kg": 700, "sold_kg": 2200,
+        "revenue_idr": 6800000,
+        "fertilizer_used_kg": 110, "fertilizer_produced_kg": 38,
+        "pesticide_used_l": 14, "pesticide_produced_l": 6
+      },
+      {
+        "reported_at": "2025-10-05T00:00:00Z",
+        "yield_kg": 3500, "self_consumption_kg": 600, "sold_kg": 2900,
+        "revenue_idr": 8100000,
+        "fertilizer_used_kg": 130, "fertilizer_produced_kg": 52,
+        "pesticide_used_l": 22, "pesticide_produced_l": 8
+      },
+      {
+        "reported_at": "2025-07-22T00:00:00Z",
+        "yield_kg": 2800, "self_consumption_kg": 900, "sold_kg": 1900,
+        "revenue_idr": 6200000,
+        "fertilizer_used_kg": 105, "fertilizer_produced_kg": null,
+        "pesticide_used_l": 12, "pesticide_produced_l": null
+      },
+      {
+        "reported_at": "2025-04-03T00:00:00Z",
+        "yield_kg": 3100, "self_consumption_kg": 600, "sold_kg": 2500,
+        "revenue_idr": 7100000,
+        "fertilizer_used_kg": 115, "fertilizer_produced_kg": 41,
+        "pesticide_used_l": 16, "pesticide_produced_l": 5
+      },
+      {
+        "reported_at": "2025-01-11T00:00:00Z",
+        "yield_kg": 2900, "self_consumption_kg": 500, "sold_kg": 2400,
+        "revenue_idr": 6400000,
+        "fertilizer_used_kg": 100, "fertilizer_produced_kg": 35,
+        "pesticide_used_l": 11, "pesticide_produced_l": 4
+      }
+    ]
+  },
+  "tasks": {
+    "village": "Ende",
+    "entries": [
+      {
+        "title": "Rice (Padi)",
+        "description": "Season 1 rice planting for Ende village",
+        "task_type": "planting",
+        "due_date": "2026-05-15",
+        "season": "Season 1",
+        "year": 2026,
+        "subtasks": [
+          {"title": "Land preparation", "due_date": "2026-01-31", "is_done": true},
+          {"title": "Planting", "due_date": "2026-02-28", "is_done": true},
+          {"title": "Growing & maintenance", "due_date": "2026-04-30", "is_done": false},
+          {"title": "Harvest", "due_date": "2026-05-15", "is_done": false}
+        ]
+      },
+      {
+        "title": "Soy (Kedelai)",
+        "description": "Season 2 soy planting for Ende village",
+        "task_type": "planting",
+        "due_date": "2025-11-15",
+        "season": "Season 2",
+        "year": 2025,
+        "subtasks": [
+          {"title": "Land preparation", "due_date": "2025-07-31", "is_done": true},
+          {"title": "Planting", "due_date": "2025-08-31", "is_done": true},
+          {"title": "Growing & maintenance", "due_date": "2025-10-31", "is_done": true},
+          {"title": "Harvest", "due_date": "2025-11-15", "is_done": true}
+        ]
+      }
+    ]
+  }
+}

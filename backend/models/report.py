@@ -11,7 +11,7 @@ class Report(Base):
     __tablename__ = "reports"
 
     id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid.uuid7())
     )
     client_id: Mapped[str] = mapped_column(
         String(36), unique=True, index=True
@@ -27,7 +27,7 @@ class Report(Base):
     yield_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
     self_consumption_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
     sold_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
-    revenue: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    revenue_idr: Mapped[int | None] = mapped_column(Integer, nullable=True)
     fertilizer_produced_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
     fertilizer_used_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
     pesticide_produced_l: Mapped[float | None] = mapped_column(Float, nullable=True)

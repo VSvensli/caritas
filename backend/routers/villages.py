@@ -1,3 +1,5 @@
+import re
+import unicodedata
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -11,6 +13,12 @@ from backend.models.village import Village
 from backend.schemas.user import UserRead
 from backend.schemas.village import VillageCreate, VillageRead, VillageUpdate
 
+
+def _slugify(name: str) -> str:
+    s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    s = re.sub(r"[^\w\s-]", "", s).strip().lower()
+    return re.sub(r"[-\s]+", "-", s)
+
 router = APIRouter(prefix="/villages", tags=["villages"])
 
 
@@ -23,16 +31,17 @@ def list_villages(_user: AnyAuthenticated, db: Annotated[Session, Depends(get_db
 def create_village(
     _user: StaffWrite, body: VillageCreate, db: Annotated[Session, Depends(get_db)]
 ):
+    slug = _slugify(body.name)
     existing = db.execute(
-        select(Village).where(Village.slug == body.slug)
+        select(Village).where(Village.slug == slug)
     ).scalar_one_or_none()
     if existing:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Village slug already exists",
+            detail="A village with this name already exists",
         )
 
-    village = Village(**body.model_dump())
+    village = Village(**body.model_dump(), slug=slug)
     db.add(village)
     db.commit()
     db.refresh(village)
@@ -63,7 +72,20 @@ def update_village(
     if village is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Village not found")
 
-    for field, value in body.model_dump(exclude_unset=True).items():
+    updates = body.model_dump(exclude_unset=True)
+    if "name" in updates:
+        slug = _slugify(updates["name"])
+        existing = db.execute(
+            select(Village).where(Village.slug == slug, Village.id != village_id)
+        ).scalar_one_or_none()
+        if existing:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="A village with this name already exists",
+            )
+        updates["slug"] = slug
+
+    for field, value in updates.items():
         setattr(village, field, value)
 
     db.commit()

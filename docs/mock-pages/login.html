@@ -293,7 +293,8 @@
             <a href="#">Forgot password?</a>
           </div>
 
-          <a href="loading.html" class="button-primary">Sign In</a>
+          <button type="submit" class="button-primary">Sign In</button>
+          <div id="login-error" style="display:none; margin-top:1rem; padding:0.75rem 1rem; background:rgba(177,0,23,0.08); border:1px solid rgba(177,0,23,0.25); border-radius:12px; color:var(--caritas-red); font-size:0.88rem; text-align:center;"></div>
         </form>
 
         <div class="login-card-footer">
@@ -310,5 +311,41 @@
     Caritas Field Portal
   </footer>
 
+  <script>
+    const API = 'http://localhost:8000';
+    const form = document.querySelector('form');
+    const errorDiv = document.getElementById('login-error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.style.display = 'none';
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => null);
+          errorDiv.textContent = data?.detail || 'Invalid email or password';
+          errorDiv.style.display = 'block';
+          return;
+        }
+
+        const { access_token, refresh_token } = await res.json();
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        window.location.href = 'dashboard.html';
+      } catch {
+        errorDiv.textContent = 'Unable to connect to the server';
+        errorDiv.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>

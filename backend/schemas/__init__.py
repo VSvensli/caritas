@@ -1,7 +1,7 @@
 from .auth import LoginRequest, PinLoginRequest, TokenResponse
 from .user import DashboardUserCreate, UserRead, VillageUserCreate
 from .village import VillageCreate, VillageRead, VillageUpdate
-from .calendar import CalendarEntryCreate, CalendarEntryRead, CalendarEntryUpdate
+from .calendar import SubTask, TaskCreate, TaskRead, TaskUpdate
 from .report import ReportCreate, ReportRead, ReportSummary
 from .sync import SyncStatus
 
@@ -15,9 +15,10 @@ __all__ = [
     "VillageCreate",
     "VillageRead",
     "VillageUpdate",
-    "CalendarEntryCreate",
-    "CalendarEntryRead",
-    "CalendarEntryUpdate",
+    "SubTask",
+    "TaskCreate",
+    "TaskRead",
+    "TaskUpdate",
     "ReportCreate",
     "ReportRead",
     "ReportSummary",

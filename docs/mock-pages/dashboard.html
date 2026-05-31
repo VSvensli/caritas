@@ -285,20 +285,6 @@
 
     .tooltip-meta span { display: block; }
 
-    /* Marker positions (East Nusa Tenggara) */
-    .m1  { top: 34%; left: 21%; }   /* W Flores */
-    .m2  { top: 33%; left: 32%; }   /* Flores */
-    .m3  { top: 33%; left: 37%; }   /* near Bajawa */
-    .m4  { top: 37%; left: 46%; }   /* Ende */
-    .m5  { top: 34%; left: 51%; }   /* Flores */
-    .m6  { top: 31%; left: 55%; }   /* near Maumere */
-    .m7  { top: 58%; left: 15%; }   /* Sumba W */
-    .m8  { top: 56%; left: 25%; }   /* Sumba E */
-    .m9  { top: 66%; left: 73%; }   /* Kupang */
-    .m10 { top: 59%; left: 82%; }   /* Timor */
-    .m11 { top: 59%; left: 88%; }   /* Timor */
-    .m12 { top: 25%; left: 73%; }   /* Lembata */
-
     .map-bottom-left {
       position: absolute;
       bottom: 1.2rem;
@@ -564,7 +550,7 @@
         <div class="user-avatar">AJ</div>
         Ana Juárez &nbsp;·&nbsp; Admin
       </div>
-      <a href="login.html" class="btn-logout">Sign out</a>
+      <button class="btn-logout" id="sign-out">Sign out</button>
     </div>
   </header>
 
@@ -573,7 +559,7 @@
 
     <!-- Map -->
     <div class="map-area">
-      <div class="map-placeholder">
+      <div class="map-placeholder" id="map-container">
 
         <!-- East Nusa Tenggara SVG map -->
         <svg class="map-svg" viewBox="0 0 1200 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -653,236 +639,213 @@
           <text x="850" y="680" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="10" fill="rgba(44,44,44,0.12)" font-style="italic" letter-spacing="0.35em">TIMOR SEA</text>
         </svg>
 
-        <!-- Village markers -->
-        <div class="marker-wrap m1">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Sukamaju</div>
-            <div class="tooltip-meta">
-              <span>187 mobile users</span>
-              <span>Last report: 8 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m2">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Harapan</div>
-            <div class="tooltip-meta">
-              <span>213 mobile users</span>
-              <span>Last report: 2 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m3">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Mekar</div>
-            <div class="tooltip-meta">
-              <span>142 mobile users</span>
-              <span>Last report: 20 Mar 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m4 active">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Ende</div>
-            <div class="tooltip-meta">
-              <span>247 mobile users</span>
-              <span>Last report: 14 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m5">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Makmur</div>
-            <div class="tooltip-meta">
-              <span>198 mobile users</span>
-              <span>Last report: 11 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m6">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Damai</div>
-            <div class="tooltip-meta">
-              <span>165 mobile users</span>
-              <span>Last report: 5 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m7">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Maju</div>
-            <div class="tooltip-meta">
-              <span>231 mobile users</span>
-              <span>Last report: 17 Mar 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m8">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Sejahtera</div>
-            <div class="tooltip-meta">
-              <span>179 mobile users</span>
-              <span>Last report: 1 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m9">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Lestari</div>
-            <div class="tooltip-meta">
-              <span>204 mobile users</span>
-              <span>Last report: 9 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m10">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Baru</div>
-            <div class="tooltip-meta">
-              <span>156 mobile users</span>
-              <span>Last report: 22 Mar 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m11">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Subur</div>
-            <div class="tooltip-meta">
-              <span>189 mobile users</span>
-              <span>Last report: 13 Apr 2026</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="marker-wrap m12">
-          <div class="marker-dot"></div>
-          <div class="marker-tooltip">
-            <div class="tooltip-name">Desa Timur</div>
-            <div class="tooltip-meta">
-              <span>221 mobile users</span>
-              <span>Last report: 6 Apr 2026</span>
-            </div>
-          </div>
-        </div>
+        <!-- Village markers are rendered dynamically -->
 
         <div class="map-bottom-left">
-          <div class="map-label">East Nusa Tenggara · 12 villages</div>
+          <div class="map-label" id="map-label">East Nusa Tenggara</div>
           <a class="btn-new-location" href="not-implemented.html">+ New location</a>
         </div>
       </div>
 
-      <!-- Map zoom controls (locked, so these are decorative) -->
       <div class="map-controls">
         <button class="map-btn" title="Zoom in">+</button>
         <button class="map-btn" title="Zoom out">−</button>
       </div>
     </div>
 
-    <!-- Gutter — shown when a village marker is selected -->
+    <!-- Gutter -->
     <aside class="gutter">
+      <div class="gutter-empty" id="gutter-empty">
+        <div class="gutter-empty-icon">&#x1F4CD;</div>
+        <p>Select a village on the map to view its summary</p>
+      </div>
 
-      <!--
-        EMPTY STATE (shown when no village is selected — toggle display to show/hide):
-        <div class="gutter-empty">
-          <div class="gutter-empty-icon">📍</div>
-          <p>Select a village on the map to view its summary</p>
-        </div>
-      -->
-
-      <!-- SELECTED STATE -->
-      <div class="gutter-content">
+      <div class="gutter-content" id="gutter-content" style="display:none;">
         <div class="gutter-top">
-          <button class="gutter-close" title="Close">✕</button>
-          <div class="gutter-eyebrow">Flores, East Nusa Tenggara</div>
-          <div class="gutter-village-name">Ende</div>
-          <div class="gutter-meta">Last report: 14 April 2026</div>
+          <button class="gutter-close" id="gutter-close" title="Close">&#x2715;</button>
+          <div class="gutter-eyebrow">East Nusa Tenggara</div>
+          <div class="gutter-village-name" id="gutter-name"></div>
+          <div class="gutter-meta" id="gutter-meta"></div>
         </div>
 
         <div class="gutter-stats">
           <div class="gutter-stat">
-            <div class="gutter-stat-value">247</div>
-            <div class="gutter-stat-label">Mobile users</div>
+            <div class="gutter-stat-value" id="gutter-population">—</div>
+            <div class="gutter-stat-label">Population</div>
           </div>
           <div class="gutter-stat">
-            <div class="gutter-stat-value">18.4 t</div>
+            <div class="gutter-stat-value" id="gutter-yield">—</div>
             <div class="gutter-stat-label">Total yield</div>
           </div>
           <div class="gutter-stat">
-            <div class="gutter-stat-value">Rp 42 M</div>
-            <div class="gutter-stat-label">Total profit</div>
+            <div class="gutter-stat-value" id="gutter-revenue">—</div>
+            <div class="gutter-stat-label">Total revenue</div>
           </div>
           <div class="gutter-stat">
-            <div class="gutter-stat-value">6</div>
+            <div class="gutter-stat-value" id="gutter-reports">—</div>
             <div class="gutter-stat-label">Reports filed</div>
           </div>
         </div>
 
-        <div class="gutter-section">
+        <div class="gutter-section" id="gutter-latest-section">
           <div class="gutter-section-title">Latest report snapshot</div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Yield</span>
-            <span class="gutter-row-value">3.2 tonnes</span>
-          </div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Self consumption</span>
-            <span class="gutter-row-value">0.8 tonnes</span>
-          </div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Profit</span>
-            <span class="gutter-row-value">Rp 7.4 M</span>
-          </div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Fertilizer used</span>
-            <span class="gutter-row-value">120 kg</span>
-          </div>
+          <div id="gutter-latest-rows"></div>
         </div>
 
-        <div class="gutter-section">
-          <div class="gutter-section-title">Current planting</div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Crop</span>
-            <span class="gutter-row-value">Rice (Padi)</span>
-          </div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Planted</span>
-            <span class="gutter-row-value">Feb 2026</span>
-          </div>
-          <div class="gutter-row">
-            <span class="gutter-row-label">Expected harvest</span>
-            <span class="gutter-row-value">May 2026</span>
-          </div>
+        <div class="gutter-section" id="gutter-planting-section">
+          <div class="gutter-section-title">Current task</div>
+          <div id="gutter-planting-rows"></div>
         </div>
 
         <div class="gutter-footer">
-          <a class="btn-view-village" href="village.html">
-            View village detail <span>→</span>
+          <a class="btn-view-village" id="gutter-detail-link" href="#">
+            View village detail <span>&rarr;</span>
           </a>
         </div>
       </div>
     </aside>
 
   </div><!-- /body -->
+
+  <script>
+    const API = 'http://localhost:8000';
+    const token = localStorage.getItem('access_token');
+    if (!token) window.location.href = 'login.html';
+
+    const headers = { 'Authorization': 'Bearer ' + token };
+
+    function formatTonnes(kg) {
+      if (kg == null) return '—';
+      return (kg / 1000).toFixed(1) + ' t';
+    }
+
+    function formatRupiah(idr) {
+      if (idr == null) return '—';
+      if (idr >= 1000000) return 'Rp ' + (idr / 1000000).toFixed(1) + ' M';
+      if (idr >= 1000) return 'Rp ' + (idr / 1000).toFixed(0) + ' K';
+      return 'Rp ' + idr;
+    }
+
+    function formatKg(kg) {
+      return kg != null ? kg + ' kg' : '—';
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function latToTop(lat) {
+      const minLat = -8.2, maxLat = -10.3;
+      const minTop = 20, maxTop = 75;
+      return minTop + (lat - minLat) / (maxLat - minLat) * (maxTop - minTop);
+    }
+
+    function lngToLeft(lng) {
+      const minLng = 119.0, maxLng = 125.0;
+      const minLeft = 10, maxLeft = 95;
+      return minLeft + (lng - minLng) / (maxLng - minLng) * (maxLeft - minLeft);
+    }
+
+    function gutterRow(label, value) {
+      return '<div class="gutter-row"><span class="gutter-row-label">' + label + '</span><span class="gutter-row-value">' + value + '</span></div>';
+    }
+
+    let activeMarker = null;
+
+    document.getElementById('sign-out').addEventListener('click', () => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = 'login.html';
+    });
+
+    document.getElementById('gutter-close').addEventListener('click', () => {
+      document.getElementById('gutter-content').style.display = 'none';
+      document.getElementById('gutter-empty').style.display = '';
+      if (activeMarker) activeMarker.classList.remove('active');
+      activeMarker = null;
+    });
+
+    async function selectVillage(village, markerEl) {
+      if (activeMarker) activeMarker.classList.remove('active');
+      markerEl.classList.add('active');
+      activeMarker = markerEl;
+
+      document.getElementById('gutter-empty').style.display = 'none';
+      document.getElementById('gutter-content').style.display = '';
+      document.getElementById('gutter-name').textContent = village.name;
+      document.getElementById('gutter-population').textContent = village.population;
+      document.getElementById('gutter-detail-link').href = 'village.html?id=' + village.id;
+
+      const [reports, tasks] = await Promise.all([
+        fetch(API + '/villages/' + village.id + '/reports', { headers }).then(r => r.json()),
+        fetch(API + '/villages/' + village.id + '/calendar', { headers }).then(r => r.json()),
+      ]);
+
+      const totalYield = reports.reduce((s, r) => s + (r.yield_kg || 0), 0);
+      const totalRevenue = reports.reduce((s, r) => s + (r.revenue_idr || 0), 0);
+
+      document.getElementById('gutter-yield').textContent = formatTonnes(totalYield);
+      document.getElementById('gutter-revenue').textContent = formatRupiah(totalRevenue);
+      document.getElementById('gutter-reports').textContent = reports.length;
+
+      if (reports.length > 0) {
+        document.getElementById('gutter-meta').textContent = 'Last report: ' + formatDate(reports[0].reported_at);
+        const r = reports[0];
+        document.getElementById('gutter-latest-rows').innerHTML =
+          gutterRow('Yield', formatTonnes(r.yield_kg)) +
+          gutterRow('Self consumption', formatTonnes(r.self_consumption_kg)) +
+          gutterRow('Revenue', formatRupiah(r.revenue_idr)) +
+          gutterRow('Fertilizer used', formatKg(r.fertilizer_used_kg));
+        document.getElementById('gutter-latest-section').style.display = '';
+      } else {
+        document.getElementById('gutter-meta').textContent = 'No reports yet';
+        document.getElementById('gutter-latest-section').style.display = 'none';
+      }
+
+      const now = new Date().toISOString().slice(0, 10);
+      const currentTask = tasks.find(t => t.due_date && t.due_date >= now);
+      if (currentTask) {
+        document.getElementById('gutter-planting-rows').innerHTML =
+          gutterRow('Task', currentTask.title) +
+          gutterRow('Type', currentTask.task_type) +
+          gutterRow('Due', formatDate(currentTask.due_date)) +
+          gutterRow('Season', currentTask.season + ' ' + currentTask.year);
+        document.getElementById('gutter-planting-section').style.display = '';
+      } else {
+        document.getElementById('gutter-planting-section').style.display = 'none';
+      }
+    }
+
+    async function init() {
+      const villages = await fetch(API + '/villages', { headers }).then(r => r.json());
+      const container = document.getElementById('map-container');
+
+      document.getElementById('map-label').textContent =
+        'East Nusa Tenggara · ' + villages.length + ' villages';
+
+      villages.forEach(v => {
+        const wrap = document.createElement('div');
+        wrap.className = 'marker-wrap';
+        wrap.style.top = latToTop(v.latitude) + '%';
+        wrap.style.left = lngToLeft(v.longitude) + '%';
+
+        wrap.innerHTML =
+          '<div class="marker-dot"></div>' +
+          '<div class="marker-tooltip">' +
+            '<div class="tooltip-name">' + v.name + '</div>' +
+            '<div class="tooltip-meta">' +
+              '<span>' + v.population + ' population</span>' +
+            '</div>' +
+          '</div>';
+
+        wrap.addEventListener('click', () => selectVillage(v, wrap));
+        container.appendChild(wrap);
+      });
+    }
+
+    init();
+  </script>
 
 </body>
 </html>

@@ -3,33 +3,50 @@ from datetime import date, datetime
 from pydantic import BaseModel
 
 
-class CalendarEntryCreate(BaseModel):
-    crop_name: str
-    planting_start: date
-    planting_end: date
-    harvest_date: date
+class SubTask(BaseModel):
+    id: str
+    task_id: str
+    title: str
+    description: str | None
+    due_date: date | None
+    duration_minutes: int | None
+    is_done: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class TaskCreate(BaseModel):
+    title: str
+    description: str | None = None
+    task_type: str
+    due_date: date | None = None
     season: str
     year: int
+    subtasks: list[SubTask] = []
 
 
-class CalendarEntryUpdate(BaseModel):
-    crop_name: str | None = None
-    planting_start: date | None = None
-    planting_end: date | None = None
-    harvest_date: date | None = None
+class TaskUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    task_type: str | None = None
+    due_date: date | None = None
     season: str | None = None
     year: int | None = None
+    subtasks: list[SubTask] | None = None
 
 
-class CalendarEntryRead(BaseModel):
+class TaskRead(BaseModel):
     id: str
     village_id: str
-    crop_name: str
-    planting_start: date
-    planting_end: date
-    harvest_date: date
+    title: str
+    description: str | None
+    task_type: str
+    due_date: date | None
     season: str
     year: int
+    subtasks: list[SubTask]
     created_at: datetime
     updated_at: datetime
 
