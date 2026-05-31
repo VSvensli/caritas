@@ -3,25 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Caritas Mobile - Login</title>
+  <title>Caritas Mobile – Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --caritas-red: #b10017;
-      --caritas-red-dark: #8f0012;
-      --caritas-cream: #f9f6f3;
-      --caritas-text: #2c2c2c;
-      --caritas-border: rgba(44, 44, 44, 0.12);
-      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
+      --red: #b10017;
+      --red-dark: #8f0012;
+      --cream: #faf7f2;
+      --warm-white: #fffdf9;
+      --text: #2c2218;
+      --text-secondary: rgba(44, 34, 24, 0.58);
+      --text-muted: rgba(44, 34, 24, 0.36);
+      --border: rgba(44, 34, 24, 0.09);
+      --shadow: 0 4px 24px rgba(44, 34, 24, 0.06);
+      --shadow-lg: 0 12px 40px rgba(44, 34, 24, 0.09);
+      --radius: 20px;
+      --radius-sm: 14px;
       --radius-pill: 999px;
-      --phone-width: 460px;
+      --phone-w: 420px;
+      --font-display: 'Lora', Georgia, serif;
+      --font-body: 'Nunito', -apple-system, sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
-      color: var(--caritas-text);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--cream);
+      min-height: 100vh;
       padding: 20px;
     }
 
@@ -30,183 +42,255 @@
     .back-link {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-height: 42px;
+      gap: 6px;
+      min-height: 40px;
       margin: 0 auto 14px;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--caritas-border);
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
       border-radius: var(--radius-pill);
-      background: rgba(255, 255, 255, 0.92);
-      color: rgba(44, 44, 44, 0.76);
-      box-shadow: var(--shadow-soft);
+      background: white;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
     }
 
     .workspace {
-      width: min(var(--phone-width), 100%);
+      width: min(var(--phone-w), 100%);
       margin: 0 auto;
-    }
-
-    .phone,
-    .panel,
-    .field,
-    .button-primary,
-    .button-secondary {
-      border: 1px solid var(--caritas-border);
-      border-radius: 24px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(44, 44, 44, 0.48);
-    }
-
-    .phone-title {
-      font-family: Athelas, "Iowan Old Style", Georgia, serif;
-      font-weight: 700;
-      line-height: 1.02;
-      letter-spacing: -0.02em;
-    }
-
-    .helper {
-      margin-top: 10px;
-      color: rgba(44, 44, 44, 0.72);
-      line-height: 1.65;
     }
 
     .phone {
       width: 100%;
-      padding: 14px;
-      background: #1f1f1f;
-      border-radius: 36px;
-      justify-self: center;
+      padding: 12px;
+      background: #1a1814;
+      border-radius: 44px;
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    .phone-screen {
-      min-height: 740px;
-      border-radius: 24px;
+    .screen {
+      min-height: 760px;
+      border-radius: 32px;
       overflow: hidden;
-      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      background: var(--warm-white);
       position: relative;
-      padding: 18px 18px 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 2;
+      border-radius: inherit;
     }
 
     .statusbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.74rem;
+      padding: 16px 22px 10px;
+      font-size: 0.76rem;
       font-weight: 700;
-      color: rgba(44, 44, 44, 0.7);
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
     }
 
-    .login-wrap {
-      padding: 72px 0 0;
-    }
-
-    .panel {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 20px;
-    }
-
-    .brand-mark {
-      height: 58px;
-      width: auto;
-      margin-bottom: 12px;
-    }
-
-    .brand-row {
+    .login-body {
+      flex: 1;
       display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .brand-copy {
-      min-width: 0;
-    }
-
-    .phone-title {
-      margin-top: 6px;
-      font-size: 2.1rem;
-      color: var(--caritas-red);
-    }
-
-    .field {
-      padding: 16px;
-      background: var(--caritas-cream);
-      margin-top: 12px;
-    }
-
-    .field strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 1.05rem;
-    }
-
-    .button-primary,
-    .button-secondary {
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      min-height: 56px;
-      padding: 0.9rem 1.2rem;
-      border-radius: var(--radius-pill);
-      font-size: 0.82rem;
+      padding: 0 24px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── brand ── */
+    .brand {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .brand-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      object-fit: cover;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-name {
+      margin-top: 14px;
+      font-size: 0.74rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      color: var(--text-muted);
     }
 
-    .button-primary {
-      margin-top: 14px;
-      background: var(--caritas-red);
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--red);
+      text-align: center;
+      line-height: 1.05;
+    }
+
+    .login-sub {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── form ── */
+    .form {
+      margin-top: 28px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      background: var(--cream);
+      border: 1px solid var(--border);
+    }
+
+    .field-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .field-value {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field-placeholder {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      margin-top: 8px;
+      padding: 0 24px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
       color: white;
-      border-color: var(--caritas-red);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(177, 0, 23, 0.22);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .button-secondary {
-      margin-top: 10px;
-      background: white;
-      color: rgba(44, 44, 44, 0.76);
+    .btn-login:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 12px rgba(177, 0, 23, 0.2);
     }
+
+    .help-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .help-link span {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── leaf deco ── */
+    .leaf-deco {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      opacity: 0.05;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .anim { animation: fadeUp 0.45s ease-out both; }
+    .anim-1 { animation-delay: 0.06s; }
+    .anim-2 { animation-delay: 0.14s; }
+    .anim-3 { animation-delay: 0.22s; }
+    .anim-4 { animation-delay: 0.3s; }
   </style>
 </head>
 <body>
   <a class="back-link" href="index.html">← Back to index</a>
   <main class="workspace">
     <section class="phone">
-      <div class="phone-screen">
-        <section class="statusbar">
+      <div class="screen">
+        <svg class="leaf-deco" viewBox="0 0 120 120" fill="none">
+          <path d="M60 8C38 30 22 58 34 82C46 106 60 112 60 112C60 112 74 106 86 82C98 58 82 30 60 8Z" fill="#5c7830" />
+          <path d="M60 22V105" stroke="#fff" stroke-width="1.5" opacity="0.3" />
+        </svg>
+
+        <div class="statusbar">
           <span>09:38</span>
-          <span>4G • 90%</span>
-        </section>
+          <span>4G · 90%</span>
+        </div>
 
-        <div class="login-wrap">
-          <section class="panel">
-            <div class="brand-row">
-              <img class="brand-mark" src="../docs/assets/caritas_internationalis_logo.jpeg" alt="Caritas logo" />
-              <div class="brand-copy">
-                <div class="label">Caritas field app</div>
-              </div>
-            </div>
-            <h2 class="phone-title">Login</h2>
-            <p class="helper">Use your phone number and PIN.</p>
+        <div class="login-body">
+          <div class="brand anim anim-1">
+            <img class="brand-logo" src="../docs/assets/caritas_internationalis_logo.jpeg" alt="Caritas" />
+            <div class="brand-name">Caritas Field App</div>
+          </div>
 
+          <h1 class="login-title anim anim-2">Login</h1>
+          <p class="login-sub anim anim-2">Use your phone number and PIN.<br>(Masuk dengan nomor telepon dan PIN.)</p>
+
+          <div class="form anim anim-3">
             <div class="field">
-              <strong>Phone number</strong>
+              <div class="field-label">Phone Number (Nomor Telepon)</div>
+              <span class="field-value field-placeholder">+62 ···</span>
             </div>
-
             <div class="field">
-              <strong>PIN</strong>
+              <div class="field-label">PIN</div>
+              <span class="field-value field-placeholder">····</span>
             </div>
+          </div>
 
-            <a class="button-primary" href="home.html">Login</a>
-            <div class="button-secondary">Need help?</div>
-          </section>
+          <a class="btn-login anim anim-4" href="home.html">Masuk — Login</a>
+
+          <div class="help-link anim anim-4">
+            <span>Need help? (Butuh bantuan?)</span>
+          </div>
         </div>
       </div>
     </section>

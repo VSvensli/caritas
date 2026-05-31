@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caritas HARVEST — System Architecture</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+    :root {
+      --red: #B10017;
+      --red-dark: #8F0012;
+      --red-glow: rgba(177, 0, 23, 0.12);
+      --beige: #EBE3D7;
+      --cream: #F9F6F3;
+      --text: #2C2C2C;
+      --text-muted: #6B6560;
+      --white: #FFFFFF;
+      --border: rgba(44, 44, 44, 0.10);
+      --green: #ADC679;
+      --blue: #60B4CD;
+      --shadow: 0 20px 50px rgba(44, 44, 44, 0.07);
+      --shadow-sm: 0 4px 16px rgba(44, 44, 44, 0.06);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --radius-pill: 999px;
+      --max-width: 1100px;
+      --font-heading: 'Playfair Display', 'Athelas', 'Georgia', serif;
+      --font-body: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      height: 64px;
+      gap: 2rem;
+      overflow-x: auto;
+    }
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--red);
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: -0.01em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-pill);
+      transition: all 0.2s;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    .nav-links a:hover {
+      color: var(--red);
+      background: var(--red-glow);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 4.5rem 2rem 3rem;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+    .hero-desc {
+      font-size: 1.08rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      line-height: 1.7;
+    }
+
+    /* ── SECTIONS ── */
+    .content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    section {
+      margin-bottom: 5rem;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      background: var(--red-glow);
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 1.2rem;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.7rem;
+    }
+
+    .section-intro {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      max-width: 620px;
+      margin-bottom: 2.2rem;
+      line-height: 1.7;
+    }
+
+    /* ── ARCHITECTURE DIAGRAM ── */
+    .arch-diagram {
+      background: var(--cream);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-diagram::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(177, 0, 23, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(96, 180, 205, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .arch-grid {
+      display: grid;
+      grid-template-columns: 1fr 120px 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 1.5rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .arch-node {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      cursor: default;
+      position: relative;
+    }
+    .arch-node:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+    .arch-node-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+    }
+    .arch-node h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .arch-node p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .arch-node .tech-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      margin-top: 0.6rem;
+    }
+
+    .icon-red { background: var(--red-glow); color: var(--red); }
+    .icon-blue { background: rgba(96, 180, 205, 0.15); color: #3a8da8; }
+    .icon-green { background: rgba(173, 198, 121, 0.2); color: #6b8a3a; }
+    .icon-beige { background: var(--beige); color: var(--text-muted); }
+
+    .tag-red { background: var(--red-glow); color: var(--red); }
+    .tag-blue { background: rgba(96, 180, 205, 0.15); color: #3a8da8; }
+    .tag-green { background: rgba(173, 198, 121, 0.2); color: #6b8a3a; }
+    .tag-beige { background: var(--beige); color: var(--text-muted); }
+
+    /* Connection arrows in center column */
+    .arch-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 60px;
+    }
+    .connector-line {
+      width: 2px;
+      height: 100%;
+      min-height: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .connector-line::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--red) 0px,
+        var(--red) 6px,
+        transparent 6px,
+        transparent 12px
+      );
+      opacity: 0.35;
+    }
+    .connector-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      background: var(--cream);
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+    .connector-arrow {
+      color: var(--red);
+      opacity: 0.5;
+      font-size: 0.9rem;
+    }
+
+    /* ── OVERVIEW LAYOUT ── */
+    .overview-arch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .overview-arch { grid-template-columns: 1fr; }
+    }
+
+    .overview-center {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+    }
+    .overview-center .arch-node {
+      width: 100%;
+      max-width: 460px;
+      text-align: center;
+      border: 2px solid var(--red);
+      background: linear-gradient(135deg, var(--white) 0%, rgba(177, 0, 23, 0.02) 100%);
+    }
+    .overview-center .arch-node-icon { margin: 0 auto 0.8rem; }
+
+    .flow-arrows {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      padding: 0.4rem 0;
+    }
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+    }
+    .flow-arrow-line {
+      width: 2px;
+      height: 28px;
+      background: repeating-linear-gradient(to bottom, var(--red) 0px, var(--red) 4px, transparent 4px, transparent 8px);
+      opacity: 0.3;
+    }
+    .flow-arrow-head {
+      font-size: 0.7rem;
+      color: var(--red);
+      opacity: 0.45;
+    }
+    .flow-arrow-label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .bottom-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .bottom-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── ROLE MATRIX ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .role-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.4rem;
+      transition: all 0.3s;
+    }
+    .role-card:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .role-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.9rem;
+    }
+    .role-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-pill);
+    }
+    .role-platform {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .role-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .role-card li {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding-left: 1.1rem;
+      position: relative;
+    }
+    .role-card li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* ── SYNC DIAGRAM ── */
+    .sync-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .sync-container { grid-template-columns: 1fr; }
+    }
+    .sync-card {
+      background: var(--cream);
+      border-radius: var(--radius);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .sync-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 0 0 0 100%;
+      opacity: 0.5;
+    }
+    .sync-card.push::after { background: rgba(177, 0, 23, 0.06); }
+    .sync-card.pull::after { background: rgba(96, 180, 205, 0.08); }
+
+    .sync-direction {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.35rem 0.8rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 1rem;
+    }
+    .sync-direction.push { background: var(--red-glow); color: var(--red); }
+    .sync-direction.pull { background: rgba(96, 180, 205, 0.15); color: #3a8da8; }
+
+    .sync-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+    .sync-card > p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .sync-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .sync-step {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+    .sync-step:last-child { padding-bottom: 0; }
+    .sync-step::before {
+      content: '';
+      position: absolute;
+      left: 13px;
+      top: 28px;
+      bottom: 0;
+      width: 1.5px;
+      background: var(--border);
+    }
+    .sync-step:last-child::before { display: none; }
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: var(--white);
+    }
+    .push .step-dot { background: var(--red); }
+    .pull .step-dot { background: var(--blue); }
+    .step-text {
+      font-size: 0.82rem;
+      color: var(--text);
+      padding-top: 0.3rem;
+      line-height: 1.5;
+    }
+    .step-text code {
+      font-size: 0.74rem;
+      background: rgba(44, 44, 44, 0.06);
+      padding: 0.15rem 0.4rem;
+      border-radius: 5px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* ── KEY DECISIONS ── */
+    .decisions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .decision-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.3rem;
+      transition: all 0.3s;
+    }
+    .decision-card:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: rgba(177, 0, 23, 0.15);
+    }
+    .decision-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .decision-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ── API ENDPOINTS ── */
+    .api-group {
+      margin-bottom: 1.5rem;
+    }
+    .api-group-header {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .api-group-header .toggle-icon {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      transition: transform 0.25s;
+    }
+    .api-group.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+    .api-group.collapsed .api-endpoints {
+      display: none;
+    }
+    .api-group-badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: var(--beige);
+      color: var(--text-muted);
+    }
+    .api-endpoints {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .api-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.65rem 1rem;
+      background: var(--cream);
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .api-row:hover {
+      background: var(--beige);
+    }
+    .method {
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      min-width: 52px;
+      text-align: center;
+    }
+    .method-get { background: rgba(173, 198, 121, 0.25); color: #5a7a2f; }
+    .method-post { background: rgba(96, 180, 205, 0.2); color: #2d7d99; }
+    .method-put { background: rgba(230, 180, 60, 0.2); color: #9a7520; }
+    .method-delete { background: rgba(177, 0, 23, 0.1); color: var(--red); }
+    .api-path {
+      font-size: 0.82rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text);
+      flex: 1;
+    }
+    .api-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+    @media (max-width: 600px) {
+      .api-desc { display: none; }
+    }
+
+    /* ── DATA MODEL ── */
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .model-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .model-card:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .model-card-header {
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .model-card-header h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .model-card-header .model-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+    .model-fields {
+      padding: 0.8rem 1.2rem;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .model-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(44,44,44,0.04);
+      font-size: 0.8rem;
+    }
+    .model-field:last-child { border-bottom: none; }
+    .field-name {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.76rem;
+      color: var(--text);
+    }
+    .field-type {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      background: var(--cream);
+      padding: 0.15rem 0.45rem;
+      border-radius: 5px;
+    }
+    .field-fk {
+      font-size: 0.62rem;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    /* ── DEPLOYMENT DIAGRAM ── */
+    .deploy-diagram {
+      background: var(--text);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    .deploy-diagram::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 90%, rgba(177, 0, 23, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(96, 180, 205, 0.06) 0%, transparent 40%);
+      pointer-events: none;
+    }
+    .deploy-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      position: relative;
+      z-index: 1;
+    }
+    .deploy-subtitle {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .docker-services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+    .docker-svc {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.1rem;
+      transition: all 0.3s;
+      cursor: default;
+    }
+    .docker-svc:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    .docker-svc.primary {
+      border-color: rgba(177, 0, 23, 0.5);
+      background: rgba(177, 0, 23, 0.1);
+    }
+    .docker-svc.primary:hover {
+      background: rgba(177, 0, 23, 0.15);
+    }
+    .docker-svc-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .docker-svc-desc {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.45;
+    }
+    .docker-svc-port {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.06);
+      padding: 0.15rem 0.4rem;
+      border-radius: 5px;
+      margin-top: 0.5rem;
+    }
+
+    /* ── MONITORING ── */
+    .monitor-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .monitor-tier {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      .monitor-tier {
+        grid-template-columns: 1fr;
+      }
+    }
+    .monitor-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-align: right;
+    }
+    @media (max-width: 600px) {
+      .monitor-label { text-align: left; }
+    }
+    .monitor-cards {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .monitor-card {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      flex: 1;
+      min-width: 160px;
+      transition: all 0.3s;
+    }
+    .monitor-card:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .monitor-card h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .monitor-card p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Grafana dashboards */
+    .grafana-dashboards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .grafana-dashboards { grid-template-columns: 1fr; }
+    }
+    .grafana-card {
+      background: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 1.4rem;
+      color: var(--white);
+      transition: all 0.3s;
+    }
+    .grafana-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(44,44,44,0.2);
+    }
+    .grafana-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+    .grafana-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .grafana-card li {
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.55);
+      padding-left: 0.9rem;
+      position: relative;
+    }
+    .grafana-card li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+    }
+    .grafana-card:nth-child(1) li::before { background: var(--green); }
+    .grafana-card:nth-child(2) li::before { background: var(--blue); }
+    .grafana-card:nth-child(3) li::before { background: var(--red); opacity: 0.7; }
+
+    /* ── COST TABLE ── */
+    .cost-table-wrap {
+      background: var(--cream);
+      border-radius: var(--radius);
+      padding: 2rem;
+      overflow-x: auto;
+    }
+    .cost-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .cost-table th {
+      text-align: left;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 0.6rem 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .cost-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .cost-table tr:last-child td {
+      border-bottom: none;
+      font-weight: 600;
+    }
+    .cost-table .cost-amount {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    /* ── MIGRATION PATH ── */
+    .migration-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .migration-timeline::before {
+      content: '';
+      position: absolute;
+      left: 13px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--red), var(--blue));
+      opacity: 0.25;
+      border-radius: 2px;
+    }
+    .migration-step {
+      position: relative;
+      padding: 0 0 2rem;
+    }
+    .migration-step:last-child { padding-bottom: 0; }
+    .migration-step::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 0.3rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2.5px solid;
+      background: var(--white);
+    }
+    .migration-step:nth-child(1)::before { border-color: var(--red); }
+    .migration-step:nth-child(2)::before { border-color: #d4764e; }
+    .migration-step:nth-child(3)::before { border-color: #8aaa6e; }
+    .migration-step:nth-child(4)::before { border-color: var(--blue); }
+    .migration-step h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .migration-step p {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── PERMISSION MATRIX ── */
+    .perm-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .perm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .perm-table th {
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0.8rem 0.8rem;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+    }
+    .perm-table th:first-child {
+      text-align: left;
+      min-width: 180px;
+    }
+    .perm-table td {
+      padding: 0.65rem 0.8rem;
+      border-bottom: 1px solid rgba(44,44,44,0.04);
+      text-align: center;
+    }
+    .perm-table td:first-child {
+      text-align: left;
+      font-weight: 500;
+    }
+    .perm-check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+    }
+    .perm-yes {
+      background: rgba(173, 198, 121, 0.2);
+      color: #5a7a2f;
+    }
+    .perm-own {
+      background: rgba(230, 180, 60, 0.15);
+      color: #9a7520;
+      font-size: 0.58rem;
+      font-weight: 700;
+      width: auto;
+      padding: 0.15rem 0.4rem;
+      letter-spacing: 0.03em;
+    }
+    .perm-no {
+      color: rgba(44,44,44,0.15);
+    }
+
+    /* ── JWT TOKENS ── */
+    .jwt-examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+    @media (max-width: 600px) {
+      .jwt-examples { grid-template-columns: 1fr; }
+    }
+    .jwt-card {
+      background: var(--text);
+      border-radius: 14px;
+      padding: 1.2rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+    }
+    .jwt-card .jwt-label {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 0.5rem;
+    }
+    .jwt-key { color: rgba(173, 198, 121, 0.8); }
+    .jwt-val { color: rgba(96, 180, 205, 0.8); }
+    .jwt-val-red { color: rgba(255, 130, 140, 0.8); }
+
+    /* ── WIRE PROTOCOL ── */
+    .protocol-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .protocol-split { grid-template-columns: 1fr; }
+    }
+    .protocol-card {
+      background: var(--cream);
+      border-radius: var(--radius);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .protocol-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .protocol-card > p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+    .protocol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 1rem;
+    }
+    .badge-rest { background: rgba(173, 198, 121, 0.2); color: #5a7a2f; }
+    .badge-ws { background: rgba(150, 100, 220, 0.15); color: #6b3fa0; }
+
+    .ws-frames {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .ws-frame {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      transition: all 0.2s;
+    }
+    .ws-frame:hover { transform: translateX(3px); }
+    .ws-frame-dir {
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      min-width: 28px;
+      text-align: center;
+    }
+    .ws-frame.client-frame { background: rgba(150, 100, 220, 0.06); }
+    .ws-frame.client-frame .ws-frame-dir { background: rgba(150, 100, 220, 0.15); color: #6b3fa0; }
+    .ws-frame.server-frame { background: rgba(96, 180, 205, 0.06); }
+    .ws-frame.server-frame .ws-frame-dir { background: rgba(96, 180, 205, 0.15); color: #2d7d99; }
+    .ws-frame.bidir-frame { background: rgba(173, 198, 121, 0.06); }
+    .ws-frame.bidir-frame .ws-frame-dir { background: rgba(173, 198, 121, 0.2); color: #5a7a2f; }
+    .ws-frame-name {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.76rem;
+      font-weight: 500;
+    }
+    .ws-frame-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    /* ── IMAGE PIPELINE ── */
+    .image-pipeline {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      background: var(--cream);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    @media (max-width: 700px) {
+      .image-pipeline { flex-direction: column; }
+    }
+    .pipeline-stage {
+      flex: 1;
+      padding: 1.8rem 1.5rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .pipeline-stage:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: var(--border);
+    }
+    @media (max-width: 700px) {
+      .pipeline-stage:not(:last-child)::after {
+        right: 20%;
+        top: auto;
+        bottom: 0;
+        height: 1px;
+        width: 60%;
+      }
+    }
+    .pipeline-stage-num {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+    .pipeline-stage h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .pipeline-stage p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0.3rem;
+      color: var(--red);
+      opacity: 0.35;
+      font-size: 1.2rem;
+    }
+    @media (max-width: 700px) {
+      .pipeline-arrow { padding: 0.3rem 0; transform: rotate(90deg); }
+    }
+
+    .method-ws { background: rgba(150, 100, 220, 0.15); color: #6b3fa0; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.78rem;
+      margin-top: 2rem;
+    }
+    footer a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--red); }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 5rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">HARVEST</div>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#auth">Auth & Roles</a></li>
+      <li><a href="#sync">Sync</a></li>
+      <li><a href="#wire">Wire Protocols</a></li>
+      <li><a href="#api">API</a></li>
+      <li><a href="#data">Data Model</a></li>
+      <li><a href="#images">Images</a></li>
+      <li><a href="#deploy">Deployment</a></li>
+      <li><a href="#monitoring">Monitoring</a></li>
+      <li><a href="#cost">Cost</a></li>
+      <li><a href="#migration">Migration</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="hero animate-in">
+  <a href="../index.html" class="back-link">&larr; Back to mocks</a>
+  <div class="hero-eyebrow">Technical Architecture</div>
+  <h1>Caritas HARVEST</h1>
+  <p class="hero-desc">Web portal and Android app for an aid organisation tracking agricultural impact across ~20 Indonesian villages. Data is submitted from a native Android app used by village workers and viewed by organisation staff through a web dashboard. Real-time chat with image sharing connects field workers and staff.</p>
+</div>
+
+<div class="content">
+
+  <!-- ═══ SYSTEM OVERVIEW ═══ -->
+  <section id="overview">
+    <div class="section-label">System Overview</div>
+    <h2>How it all fits together</h2>
+    <p class="section-intro">One FastAPI backend serves both the web and Android clients through a shared REST API and WebSocket endpoint. Nginx sits in front as a reverse proxy with TLS termination, and also serves images directly.</p>
+
+    <div class="arch-diagram animate-in delay-1">
+      <div class="overview-arch">
+        <!-- Client tier -->
+        <div class="arch-node">
+          <div class="arch-node-icon icon-blue">W</div>
+          <h4>Web App</h4>
+          <p>Dashboard for staff. Maps, reports, village management, user admin, and real-time chat via native WebSocket API.</p>
+          <span class="tech-tag tag-blue">JS / React + WebSocket</span>
+        </div>
+        <div class="arch-node">
+          <div class="arch-node-icon icon-green">M</div>
+          <h4>Android App</h4>
+          <p>Native Kotlin app for village reporters. Offline-first with Room DB, sync queue, and OkHttp WebSocket for real-time chat.</p>
+          <span class="tech-tag tag-green">Kotlin + Room + OkHttp WS</span>
+        </div>
+
+        <!-- Flow arrows -->
+        <div class="flow-arrows">
+          <div class="flow-arrow">
+            <div class="flow-arrow-head">&#9660;</div>
+            <div class="flow-arrow-line"></div>
+            <div class="flow-arrow-label">HTTPS + WSS</div>
+          </div>
+          <div class="flow-arrow">
+            <div class="flow-arrow-head">&#9660;</div>
+            <div class="flow-arrow-line"></div>
+            <div class="flow-arrow-label">HTTPS + WSS</div>
+          </div>
+        </div>
+
+        <!-- Center: API -->
+        <div class="overview-center">
+          <div class="arch-node">
+            <div class="arch-node-icon icon-red" style="margin: 0 auto 0.8rem;">A</div>
+            <h4>Nginx &rarr; FastAPI Backend</h4>
+            <p>Nginx handles TLS termination, reverse-proxies REST and WebSocket to FastAPI, serves static web client files, and serves image bytes directly via <code>try_files</code>. Single uvicorn ASGI worker.</p>
+            <span class="tech-tag tag-red">FastAPI + SQLAlchemy 2.0 async</span>
+          </div>
+        </div>
+
+        <!-- Flow arrows -->
+        <div class="flow-arrows">
+          <div class="flow-arrow">
+            <div class="flow-arrow-head">&#9660;</div>
+            <div class="flow-arrow-line"></div>
+          </div>
+        </div>
+
+        <!-- Data tier -->
+        <div class="bottom-row">
+          <div class="arch-node">
+            <div class="arch-node-icon icon-beige">P</div>
+            <h4>PostgreSQL</h4>
+            <p>Primary data store. Daily pg_dump backups, 7-day retention.</p>
+            <span class="tech-tag tag-beige">PostgreSQL 16</span>
+          </div>
+          <div class="arch-node">
+            <div class="arch-node-icon icon-beige">I</div>
+            <h4>Image Storage</h4>
+            <p>Local filesystem for originals and thumbnails. Nginx serves bytes directly. Migration path to S3 / DO Spaces.</p>
+            <span class="tech-tag tag-beige">Local FS &rarr; S3</span>
+          </div>
+          <div class="arch-node">
+            <div class="arch-node-icon icon-beige">K</div>
+            <h4>Secrets</h4>
+            <p>JWT signing key and DB credentials stored in <code>.env</code>, outside of version control.</p>
+            <span class="tech-tag tag-beige">.env file</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ AUTH & ROLES ═══ -->
+  <section id="auth">
+    <div class="section-label">Authentication</div>
+    <h2>Users, roles & access</h2>
+    <p class="section-intro">Two distinct user populations with different auth flows. Admin creates all accounts via the web portal. Mobile credentials are handed out in person during training.</p>
+
+    <div class="role-grid animate-in delay-1">
+      <div class="role-card">
+        <div class="role-card-header">
+          <span class="role-badge tag-red">Admin</span>
+          <span class="role-platform">Web App</span>
+        </div>
+        <ul>
+          <li>Full system access</li>
+          <li>Create and manage all users</li>
+          <li>Create, edit, delete villages</li>
+          <li>Manage planting schedules</li>
+          <li>View all reports and metrics</li>
+          <li>Chat with any user, send images</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-card-header">
+          <span class="role-badge tag-blue">Editor</span>
+          <span class="role-platform">Web App</span>
+        </div>
+        <ul>
+          <li>Create and edit villages</li>
+          <li>Manage planting schedules</li>
+          <li>View all reports and metrics</li>
+          <li>Cannot manage users</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-card-header">
+          <span class="role-badge tag-green">Viewer</span>
+          <span class="role-platform">Web App</span>
+        </div>
+        <ul>
+          <li>Read-only dashboard access</li>
+          <li>View villages and schedules</li>
+          <li>View all reports</li>
+          <li>Cannot create or edit anything</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-card-header">
+          <span class="role-badge tag-beige">Reporter</span>
+          <span class="role-platform">Android App</span>
+        </div>
+        <ul>
+          <li>Submit reports for own village</li>
+          <li>View own village schedule</li>
+          <li>Scoped by <code>village_id</code> JWT claim</li>
+          <li>Works offline, syncs when connected</li>
+          <li>Chat with staff, send images</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="jwt-examples animate-in delay-2">
+      <div class="jwt-card">
+        <span class="jwt-label">Staff JWT payload</span>
+        {<br>
+        &nbsp;&nbsp;<span class="jwt-key">"sub"</span>: <span class="jwt-val">"user_id"</span>,<br>
+        &nbsp;&nbsp;<span class="jwt-key">"role"</span>: <span class="jwt-val">"admin"</span>,<br>
+        &nbsp;&nbsp;<span class="jwt-key">"village_id"</span>: <span class="jwt-val-red">null</span><br>
+        }
+      </div>
+      <div class="jwt-card">
+        <span class="jwt-label">Reporter JWT payload</span>
+        {<br>
+        &nbsp;&nbsp;<span class="jwt-key">"sub"</span>: <span class="jwt-val">"user_id"</span>,<br>
+        &nbsp;&nbsp;<span class="jwt-key">"role"</span>: <span class="jwt-val">"reporter"</span>,<br>
+        &nbsp;&nbsp;<span class="jwt-key">"village_id"</span>: <span class="jwt-val">"v_12"</span><br>
+        }
+      </div>
+    </div>
+
+    <!-- Permission Matrix -->
+    <div style="margin-top: 2rem;">
+      <h3 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 1rem;">Permission Matrix</h3>
+      <div class="perm-table-wrap">
+        <table class="perm-table">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Admin</th>
+              <th>Editor</th>
+              <th>Viewer</th>
+              <th>Reporter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Manage users</td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+            </tr>
+            <tr>
+              <td>Create / edit villages</td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+            </tr>
+            <tr>
+              <td>Create / edit schedules</td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+            </tr>
+            <tr>
+              <td>View villages / schedules</td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-own">OWN</span></td>
+            </tr>
+            <tr>
+              <td>View reports</td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-own">OWN</span></td>
+            </tr>
+            <tr>
+              <td>Submit reports</td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-no">&mdash;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Chat &amp; send images</td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+              <td><span class="perm-check perm-yes">&#10003;</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ SYNC STRATEGY ═══ -->
+  <section id="sync">
+    <div class="section-label">Sync Strategy</div>
+    <h2>Mobile &harr; Backend</h2>
+    <p class="section-intro">The Android app handles two directions of data flow. Reports push up when connectivity is available; schedules pull down on launch and periodic intervals.</p>
+
+    <div class="sync-container animate-in delay-1">
+      <div class="sync-card push">
+        <div class="sync-direction push">&#9650; Push</div>
+        <h3>Reporter &rarr; Cloud</h3>
+        <p>Reports created offline are queued in the local Room database and synced when network becomes available.</p>
+        <ol class="sync-steps">
+          <li class="sync-step">
+            <span class="step-dot">1</span>
+            <span class="step-text">Report created offline, stored in Room DB sync queue</span>
+          </li>
+          <li class="sync-step">
+            <span class="step-dot">2</span>
+            <span class="step-text">WorkManager job fires when network is available</span>
+          </li>
+          <li class="sync-step">
+            <span class="step-dot">3</span>
+            <span class="step-text"><code>POST /villages/{id}/reports</code> for each queued item</span>
+          </li>
+          <li class="sync-step">
+            <span class="step-dot">4</span>
+            <span class="step-text">On <code>200 OK</code> &rarr; mark synced locally; on failure &rarr; retry with backoff</span>
+          </li>
+        </ol>
+      </div>
+      <div class="sync-card pull">
+        <div class="sync-direction pull">&#9660; Pull</div>
+        <h3>Cloud &rarr; Reporter</h3>
+        <p>Schedules managed by staff in the web app are polled on launch and every ~30 minutes.</p>
+        <ol class="sync-steps">
+          <li class="sync-step">
+            <span class="step-dot">1</span>
+            <span class="step-text">App launches or periodic timer fires (~30 min)</span>
+          </li>
+          <li class="sync-step">
+            <span class="step-dot">2</span>
+            <span class="step-text"><code>GET /villages/{id}/calendar?updated_since=&lt;ts&gt;</code></span>
+          </li>
+          <li class="sync-step">
+            <span class="step-dot">3</span>
+            <span class="step-text">Incremental updates stored in Room DB for offline viewing</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="decisions-grid animate-in delay-2">
+      <div class="decision-card">
+        <h4>Idempotent writes</h4>
+        <p>Each report gets a client-generated UUID before sync. The backend deduplicates on this UUID to prevent double-counting on retries.</p>
+      </div>
+      <div class="decision-card">
+        <h4>Incremental pull</h4>
+        <p><code>updated_since</code> timestamp filtering so the app only fetches what changed since the last sync.</p>
+      </div>
+      <div class="decision-card">
+        <h4>WebSocket for chat</h4>
+        <p>Real-time messaging uses a persistent WebSocket connection. Schedule sync remains polling-based — different cadence, different pattern.</p>
+      </div>
+      <div class="decision-card">
+        <h4>Image uploads</h4>
+        <p>Multipart upload to FastAPI, stored locally with Pillow-generated thumbnails. Nginx serves bytes directly. Migration path to S3.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ WIRE PROTOCOLS ═══ -->
+  <section id="wire">
+    <div class="section-label">Wire Protocols</div>
+    <h2>REST + WebSocket</h2>
+    <p class="section-intro">Both clients use the same REST endpoints and the same WebSocket protocol. The backend doesn't know or care which client is connected.</p>
+
+    <div class="protocol-split animate-in delay-1">
+      <div class="protocol-card">
+        <div class="protocol-badge badge-rest">REST over HTTPS</div>
+        <h3>Request / Response</h3>
+        <p>Standard REST for auth, CRUD operations, paginated history, and image upload/serving. JWT carried as Bearer token (Android) or httpOnly cookie (web).</p>
+        <div class="api-endpoints" style="margin-top: 0.5rem;">
+          <div class="api-row">
+            <span class="method method-post">POST</span>
+            <span class="api-path">/auth/*</span>
+            <span class="api-desc">Signup, login, refresh</span>
+          </div>
+          <div class="api-row">
+            <span class="method method-get">GET</span>
+            <span class="api-path">/conversations</span>
+            <span class="api-desc">List conversations</span>
+          </div>
+          <div class="api-row">
+            <span class="method method-get">GET</span>
+            <span class="api-path">/conversations/:id/messages</span>
+            <span class="api-desc">Paginated history</span>
+          </div>
+          <div class="api-row">
+            <span class="method method-post">POST</span>
+            <span class="api-path">/images/upload</span>
+            <span class="api-desc">Multipart image upload</span>
+          </div>
+          <div class="api-row">
+            <span class="method method-get">GET</span>
+            <span class="api-path">/images/:id</span>
+            <span class="api-desc">Short-lived signed URL</span>
+          </div>
+        </div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-badge badge-ws">WebSocket &middot; JSON frames</div>
+        <h3>Real-time Channel</h3>
+        <p>Persistent connection for chat. First frame carries JWT for auth handshake. All subsequent frames are typed JSON messages.</p>
+        <div class="ws-frames" style="margin-top: 0.5rem;">
+          <div class="ws-frame client-frame">
+            <span class="ws-frame-dir">C&rarr;S</span>
+            <span class="ws-frame-name">auth</span>
+            <span class="ws-frame-desc">First frame, carries JWT</span>
+          </div>
+          <div class="ws-frame client-frame">
+            <span class="ws-frame-dir">C&rarr;S</span>
+            <span class="ws-frame-name">send_message</span>
+            <span class="ws-frame-desc">Send chat message</span>
+          </div>
+          <div class="ws-frame server-frame">
+            <span class="ws-frame-dir">S&rarr;C</span>
+            <span class="ws-frame-name">message_ack</span>
+            <span class="ws-frame-desc">Delivery confirmation</span>
+          </div>
+          <div class="ws-frame server-frame">
+            <span class="ws-frame-dir">S&rarr;C</span>
+            <span class="ws-frame-name">new_message</span>
+            <span class="ws-frame-desc">Incoming message</span>
+          </div>
+          <div class="ws-frame bidir-frame">
+            <span class="ws-frame-dir">&#8596;</span>
+            <span class="ws-frame-name">typing</span>
+            <span class="ws-frame-desc">Typing indicator</span>
+          </div>
+          <div class="ws-frame bidir-frame">
+            <span class="ws-frame-dir">&#8596;</span>
+            <span class="ws-frame-name">read_receipt</span>
+            <span class="ws-frame-desc">Message read status</span>
+          </div>
+          <div class="ws-frame server-frame">
+            <span class="ws-frame-dir">S&rarr;C</span>
+            <span class="ws-frame-name">presence</span>
+            <span class="ws-frame-desc">Online/offline status</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ API ENDPOINTS ═══ -->
+  <section id="api">
+    <div class="section-label">REST API</div>
+    <h2>Endpoints</h2>
+    <p class="section-intro">All endpoints served by a single FastAPI backend behind Nginx. Click a group header to collapse it.</p>
+
+    <div class="api-group" id="api-auth">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Auth
+        <span class="api-group-badge">All users</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/auth/signup</span>
+          <span class="api-desc">Create account</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/auth/login</span>
+          <span class="api-desc">Returns JWT token</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/auth/refresh</span>
+          <span class="api-desc">Refresh token</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-users">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Users
+        <span class="api-group-badge">Admin only</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/users</span>
+          <span class="api-desc">List staff + reporters</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/users</span>
+          <span class="api-desc">Create user with role + village</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-delete">DEL</span>
+          <span class="api-path">/users/{id}</span>
+          <span class="api-desc">Remove user</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-villages">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Villages
+        <span class="api-group-badge">Admin/Editor write, others read</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/villages</span>
+          <span class="api-desc">List all (reporter sees own)</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/villages</span>
+          <span class="api-desc">Create village</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/villages/{id}</span>
+          <span class="api-desc">Village detail</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-put">PUT</span>
+          <span class="api-path">/villages/{id}</span>
+          <span class="api-desc">Update village</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-delete">DEL</span>
+          <span class="api-path">/villages/{id}</span>
+          <span class="api-desc">Delete village</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-calendar">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Schedules
+        <span class="api-group-badge">Admin/Editor write, others read</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/villages/{id}/calendar?updated_since=</span>
+          <span class="api-desc">Incremental sync</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/villages/{id}/calendar</span>
+          <span class="api-desc">Create entry</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-put">PUT</span>
+          <span class="api-path">/villages/{id}/calendar/{entry_id}</span>
+          <span class="api-desc">Update entry</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-delete">DEL</span>
+          <span class="api-path">/villages/{id}/calendar/{entry_id}</span>
+          <span class="api-desc">Remove entry</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-reports">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Reports
+        <span class="api-group-badge">Reporter submits, staff views</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/villages/{id}/reports</span>
+          <span class="api-desc">Submit (idempotent via client UUID)</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/villages/{id}/reports</span>
+          <span class="api-desc">List reports</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/reports/summary</span>
+          <span class="api-desc">Dashboard aggregated metrics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-conversations">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Conversations
+        <span class="api-group-badge">Authenticated users</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/conversations</span>
+          <span class="api-desc">List user's conversations</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/conversations</span>
+          <span class="api-desc">Create conversation</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/conversations/{id}/messages</span>
+          <span class="api-desc">Paginated message history</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-images">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Images
+        <span class="api-group-badge">Upload + signed URL serving</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-post">POST</span>
+          <span class="api-path">/images/upload</span>
+          <span class="api-desc">Multipart upload, generates thumbnail</span>
+        </div>
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/images/{id}</span>
+          <span class="api-desc">Issues short-lived signed URL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-websocket">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        WebSocket
+        <span class="api-group-badge">Real-time chat</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-ws">WS</span>
+          <span class="api-path">/ws</span>
+          <span class="api-desc">JSON frames: auth, send_message, typing, read_receipt, presence</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-group" id="api-sync">
+      <div class="api-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="toggle-icon">&#9662;</span>
+        Sync
+        <span class="api-group-badge">Mobile convenience</span>
+      </div>
+      <div class="api-endpoints">
+        <div class="api-row">
+          <span class="method method-get">GET</span>
+          <span class="api-path">/sync/status</span>
+          <span class="api-desc">Last-modified timestamps per resource</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ DATA MODEL ═══ -->
+  <section id="data">
+    <div class="section-label">Data Model</div>
+    <h2>Database schema</h2>
+    <p class="section-intro">Eight tables in PostgreSQL covering agriculture tracking, chat, and image metadata. Village reports allow partial submissions. The images table stores metadata only — bytes live on the filesystem.</p>
+
+    <div class="model-grid animate-in delay-1">
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon icon-red">U</div>
+          <h4>User</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">email</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">hashed_password</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">role</span><span class="field-type">enum</span></li>
+          <li class="model-field"><span class="field-name">village_id</span><span class="field-type">uuid?</span> <span class="field-fk">FK &rarr; Village</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon icon-green">V</div>
+          <h4>Village</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">name</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">slug</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">latitude</span><span class="field-type">float</span></li>
+          <li class="model-field"><span class="field-name">longitude</span><span class="field-type">float</span></li>
+          <li class="model-field"><span class="field-name">population</span><span class="field-type">int</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon icon-blue">C</div>
+          <h4>PlantingCalendar</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">village_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; Village</span></li>
+          <li class="model-field"><span class="field-name">crop_name</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">planting_start</span><span class="field-type">date</span></li>
+          <li class="model-field"><span class="field-name">planting_end</span><span class="field-type">date</span></li>
+          <li class="model-field"><span class="field-name">harvest_date</span><span class="field-type">date</span></li>
+          <li class="model-field"><span class="field-name">season</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">year</span><span class="field-type">int</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon icon-beige">R</div>
+          <h4>VillageReport</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">village_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; Village</span></li>
+          <li class="model-field"><span class="field-name">reported_at</span><span class="field-type">datetime</span></li>
+          <li class="model-field"><span class="field-name">yield_kg</span><span class="field-type">float?</span></li>
+          <li class="model-field"><span class="field-name">self_consumption_kg</span><span class="field-type">float?</span></li>
+          <li class="model-field"><span class="field-name">profit</span><span class="field-type">float?</span></li>
+          <li class="model-field"><span class="field-name">fertilizer_used_kg</span><span class="field-type">float?</span></li>
+          <li class="model-field"><span class="field-name">fertilizer_produced_kg</span><span class="field-type">float?</span></li>
+          <li class="model-field"><span class="field-name">pesticide_used_l</span><span class="field-type">float?</span></li>
+          <li class="model-field"><span class="field-name">pesticide_produced_l</span><span class="field-type">float?</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon" style="background: rgba(150, 100, 220, 0.15); color: #6b3fa0;">D</div>
+          <h4>Conversation</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">title</span><span class="field-type">string?</span></li>
+          <li class="model-field"><span class="field-name">created_at</span><span class="field-type">datetime</span></li>
+          <li class="model-field"><span class="field-name">updated_at</span><span class="field-type">datetime</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon" style="background: rgba(150, 100, 220, 0.15); color: #6b3fa0;">P</div>
+          <h4>ConversationParticipant</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">conversation_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; Conversation</span></li>
+          <li class="model-field"><span class="field-name">user_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; User</span></li>
+          <li class="model-field"><span class="field-name">joined_at</span><span class="field-type">datetime</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon" style="background: rgba(150, 100, 220, 0.15); color: #6b3fa0;">M</div>
+          <h4>Message</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">conversation_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; Conversation</span></li>
+          <li class="model-field"><span class="field-name">sender_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; User</span></li>
+          <li class="model-field"><span class="field-name">body</span><span class="field-type">text</span></li>
+          <li class="model-field"><span class="field-name">image_id</span><span class="field-type">uuid?</span> <span class="field-fk">FK &rarr; Image</span></li>
+          <li class="model-field"><span class="field-name">created_at</span><span class="field-type">datetime</span></li>
+        </ul>
+      </div>
+      <div class="model-card">
+        <div class="model-card-header">
+          <div class="model-icon" style="background: rgba(230, 180, 60, 0.15); color: #9a7520;">I</div>
+          <h4>Image</h4>
+        </div>
+        <ul class="model-fields">
+          <li class="model-field"><span class="field-name">id</span><span class="field-type">uuid / pk</span></li>
+          <li class="model-field"><span class="field-name">uploader_id</span><span class="field-type">uuid</span> <span class="field-fk">FK &rarr; User</span></li>
+          <li class="model-field"><span class="field-name">original_path</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">thumb_path</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">mime_type</span><span class="field-type">string</span></li>
+          <li class="model-field"><span class="field-name">size_bytes</span><span class="field-type">int</span></li>
+          <li class="model-field"><span class="field-name">created_at</span><span class="field-type">datetime</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ IMAGE STORAGE ═══ -->
+  <section id="images">
+    <div class="section-label">Image Pipeline</div>
+    <h2>Upload, process & serve</h2>
+    <p class="section-intro">Images are uploaded via multipart POST, validated for ownership, and thumbnailed in the background via Pillow. Nginx serves the actual bytes directly once FastAPI has authorized the request and issued a signed URL.</p>
+
+    <div class="image-pipeline animate-in delay-1">
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">Step 1</div>
+        <h4>Upload</h4>
+        <p>Client sends multipart form to <code>POST /images/upload</code>. FastAPI validates auth, parses with <code>python-multipart</code>, writes original to local filesystem.</p>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">Step 2</div>
+        <h4>Thumbnail</h4>
+        <p>FastAPI BackgroundTask calls Pillow via <code>asyncio.to_thread</code> to generate a thumbnail. Metadata row written to <code>images</code> table.</p>
+      </div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">Step 3</div>
+        <h4>Serve</h4>
+        <p><code>GET /images/:id</code> validates membership, returns a short-lived signed URL. Nginx serves bytes directly via <code>try_files</code> — FastAPI never touches the file again.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h3 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 0.5rem;">Storage Migration Path</h3>
+      <div class="decisions-grid" style="margin-top: 0.8rem;">
+        <div class="decision-card">
+          <h4>Phase 1: Local filesystem</h4>
+          <p>Originals and thumbnails in a mounted volume on the VPS. Nginx serves bytes. Simple, no external dependencies.</p>
+        </div>
+        <div class="decision-card">
+          <h4>Phase 2: S3 / DO Spaces</h4>
+          <p>Swap write path to S3 SDK. Signed URLs point to S3 directly. Eliminates disk pressure on the VPS and enables CDN.</p>
+        </div>
+        <div class="decision-card">
+          <h4>Abstraction layer</h4>
+          <p>Image service interface with <code>save()</code>, <code>url_for()</code>, and <code>delete()</code>. Swap implementation without touching callers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ DEPLOYMENT ═══ -->
+  <section id="deploy">
+    <div class="section-label">Deployment</div>
+    <h2>VPS with Docker Compose</h2>
+    <p class="section-intro">Everything runs on a single DigitalOcean droplet. Docker containers managed by one <code>docker-compose.yml</code>. Nginx handles TLS termination, WebSocket proxying, and static/image file serving.</p>
+
+    <div class="deploy-diagram animate-in delay-1">
+      <div class="deploy-title">Docker Compose Stack</div>
+      <div class="deploy-subtitle">All services on one droplet &mdash; 1-2 vCPU, 2-4 GB RAM</div>
+      <div class="docker-services">
+        <div class="docker-svc primary">
+          <div class="docker-svc-name">nginx</div>
+          <div class="docker-svc-desc">TLS termination, reverse proxy (REST + WS), static files, image serving</div>
+          <div class="docker-svc-port">:443 / :80</div>
+        </div>
+        <div class="docker-svc primary">
+          <div class="docker-svc-name">api</div>
+          <div class="docker-svc-desc">FastAPI + uvicorn ASGI, single worker, WebSocket endpoint</div>
+          <div class="docker-svc-port">:8000</div>
+        </div>
+        <div class="docker-svc">
+          <div class="docker-svc-name">postgres</div>
+          <div class="docker-svc-desc">PostgreSQL 16, persistent volume</div>
+          <div class="docker-svc-port">:5432</div>
+        </div>
+        <div class="docker-svc">
+          <div class="docker-svc-name">prometheus</div>
+          <div class="docker-svc-desc">Metrics collection, 15s scrape</div>
+          <div class="docker-svc-port">:9090</div>
+        </div>
+        <div class="docker-svc">
+          <div class="docker-svc-name">loki</div>
+          <div class="docker-svc-desc">Log aggregation, 30-day retention</div>
+          <div class="docker-svc-port">:3100</div>
+        </div>
+        <div class="docker-svc">
+          <div class="docker-svc-name">grafana</div>
+          <div class="docker-svc-desc">Dashboards for metrics + logs</div>
+          <div class="docker-svc-port">:3000</div>
+        </div>
+        <div class="docker-svc">
+          <div class="docker-svc-name">promtail</div>
+          <div class="docker-svc-desc">Ships container logs to Loki</div>
+          <div class="docker-svc-port">&mdash;</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h3 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 0.5rem;">Security</h3>
+      <div class="decisions-grid" style="margin-top: 0.8rem;">
+        <div class="decision-card">
+          <h4>Firewall (ufw)</h4>
+          <p>Only ports 22, 80, and 443 open. All other services on internal Docker network only.</p>
+        </div>
+        <div class="decision-card">
+          <h4>SSH hardened</h4>
+          <p>Key-only authentication, password login disabled. Optional non-standard port.</p>
+        </div>
+        <div class="decision-card">
+          <h4>Secrets in .env</h4>
+          <p>DB password, JWT signing key, Grafana admin password. Not committed to git.</p>
+        </div>
+        <div class="decision-card">
+          <h4>Auto updates</h4>
+          <p>Unattended security updates enabled on the host via <code>unattended-upgrades</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ MONITORING ═══ -->
+  <section id="monitoring">
+    <div class="section-label">Observability</div>
+    <h2>Monitoring stack</h2>
+    <p class="section-intro">Prometheus scrapes metrics every 15 seconds. Promtail ships container logs to Loki. Grafana ties it all together with three pre-configured dashboards.</p>
+
+    <div class="monitor-flow animate-in delay-1">
+      <div class="monitor-tier">
+        <div class="monitor-label">Metrics</div>
+        <div class="monitor-cards">
+          <div class="monitor-card">
+            <h4>FastAPI</h4>
+            <p>Request rate, latency, status codes, active connections</p>
+          </div>
+          <div class="monitor-card">
+            <h4>PostgreSQL</h4>
+            <p>Connections, query duration, table sizes</p>
+          </div>
+          <div class="monitor-card">
+            <h4>Nginx</h4>
+            <p>Request count, bytes transferred, WebSocket upgrades</p>
+          </div>
+          <div class="monitor-card">
+            <h4>Host</h4>
+            <p>CPU, memory, disk, network via node_exporter</p>
+          </div>
+        </div>
+      </div>
+      <div class="monitor-tier">
+        <div class="monitor-label">Logs</div>
+        <div class="monitor-cards">
+          <div class="monitor-card">
+            <h4>API stdout</h4>
+            <p>Request logs, errors, sync events</p>
+          </div>
+          <div class="monitor-card">
+            <h4>Nginx access</h4>
+            <p>Access patterns, blocked requests</p>
+          </div>
+          <div class="monitor-card">
+            <h4>PostgreSQL</h4>
+            <p>Slow queries, connection errors</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grafana-dashboards animate-in delay-2">
+      <div class="grafana-card">
+        <h4>Application Health</h4>
+        <ul>
+          <li>Request rate & error rate</li>
+          <li>p95 latency</li>
+          <li>Active WebSocket connections</li>
+          <li>Sync queue depth</li>
+        </ul>
+      </div>
+      <div class="grafana-card">
+        <h4>Infrastructure</h4>
+        <ul>
+          <li>CPU & memory usage</li>
+          <li>Disk utilisation</li>
+          <li>DB connections & size</li>
+          <li>Container restarts</li>
+        </ul>
+      </div>
+      <div class="grafana-card">
+        <h4>HARVEST Operations</h4>
+        <ul>
+          <li>Reports submitted per day</li>
+          <li>Villages actively reporting</li>
+          <li>Messages sent, images uploaded</li>
+          <li>Image storage disk usage</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ COST ═══ -->
+  <section id="cost">
+    <div class="section-label">Budget</div>
+    <h2>Estimated monthly cost</h2>
+    <p class="section-intro">The full stack runs on open-source tooling with minimal cloud spend. All monitoring, proxying, and database services are self-hosted on the same droplet.</p>
+
+    <div class="cost-table-wrap animate-in delay-1">
+      <table class="cost-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>20 villages</th>
+            <th>2,000 villages</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DigitalOcean Droplet</td>
+            <td class="cost-amount">$12/mo</td>
+            <td class="cost-amount">$24/mo</td>
+          </tr>
+          <tr>
+            <td>Automated backups</td>
+            <td class="cost-amount">$2.40/mo</td>
+            <td class="cost-amount">$4.80/mo</td>
+          </tr>
+          <tr>
+            <td>DO Spaces (remote backups)</td>
+            <td class="cost-amount">$5/mo</td>
+            <td class="cost-amount">$5/mo</td>
+          </tr>
+          <tr>
+            <td>Domain name</td>
+            <td class="cost-amount">~$1/mo</td>
+            <td class="cost-amount">~$1/mo</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td class="cost-amount" style="color: var(--red);">~$20/mo</td>
+            <td class="cost-amount" style="color: var(--red);">~$35/mo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ═══ MIGRATION PATH ═══ -->
+  <section id="migration">
+    <div class="section-label">Future</div>
+    <h2>Migration path to AWS</h2>
+    <p class="section-intro">If the project outgrows a single VPS, each layer can be moved independently. The Docker Compose setup acts as a stepping stone — same containers, different orchestrator.</p>
+
+    <div class="migration-timeline animate-in delay-1">
+      <div class="migration-step">
+        <h4>1. Database first</h4>
+        <p>Move Postgres to RDS or DO Managed Database. Change one connection string — the app doesn't know the difference.</p>
+      </div>
+      <div class="migration-step">
+        <h4>2. Image storage to S3</h4>
+        <p>Swap the image service implementation from local filesystem to S3 / DO Spaces. Signed URLs point to S3 directly, eliminating disk pressure and enabling CDN. Nginx image serving is no longer needed.</p>
+      </div>
+      <div class="migration-step">
+        <h4>3. Compute</h4>
+        <p>Containerised with Docker Compose, so moving to ECS Fargate or Kubernetes is straightforward. ALB replaces Nginx for TLS and routing; sticky sessions or Redis pubsub needed for WebSocket at scale.</p>
+      </div>
+      <div class="migration-step">
+        <h4>4. Monitoring</h4>
+        <p>Prometheus + Loki + Grafana run anywhere, or swap for managed equivalents like CloudWatch or Grafana Cloud.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Caritas HARVEST &mdash; Architecture Documentation</p>
+  <p style="margin-top: 0.4rem;"><a href="../index.html">Back to mocks index</a></p>
+</footer>
+
+<script>
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('section').forEach(el => observer.observe(el));
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      if (window.scrollY >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.style.color = '';
+      link.style.background = '';
+      if (link.getAttribute('href') === '#' + current) {
+        link.style.color = 'var(--red)';
+        link.style.background = 'var(--red-glow)';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

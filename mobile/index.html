@@ -3,179 +3,237 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Caritas Mobile Layouts</title>
+  <title>Caritas Mobile – Screen Index</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --caritas-red: #b10017;
-      --caritas-red-dark: #8f0012;
-      --caritas-cream: #f9f6f3;
-      --caritas-text: #2c2c2c;
-      --caritas-border: rgba(44, 44, 44, 0.12);
-      --shadow-soft: 0 20px 50px rgba(44, 44, 44, 0.08);
-      --radius-card: 24px;
+      --red: #b10017;
+      --red-dark: #8f0012;
+      --green: #5c7830;
+      --cream: #faf7f2;
+      --warm-white: #fffdf9;
+      --text: #2c2218;
+      --text-secondary: rgba(44, 34, 24, 0.58);
+      --text-muted: rgba(44, 34, 24, 0.36);
+      --border: rgba(44, 34, 24, 0.09);
+      --shadow: 0 4px 24px rgba(44, 34, 24, 0.06);
+      --shadow-lg: 0 12px 40px rgba(44, 34, 24, 0.09);
+      --radius: 20px;
       --radius-pill: 999px;
-      --max-width: 1100px;
+      --font-display: 'Lora', Georgia, serif;
+      --font-body: 'Nunito', -apple-system, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: var(--caritas-text);
-      background: linear-gradient(180deg, #ffffff 0%, #f8f4ef 100%);
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--cream);
       min-height: 100vh;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .shell {
-      width: min(var(--max-width), calc(100% - 32px));
+      width: min(720px, calc(100% - 40px));
       margin: 0 auto;
-    }
-
-    header {
-      padding: 3.5rem 0 1.5rem;
+      padding: 48px 0 64px;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      padding: 0.7rem 1rem;
+      gap: 6px;
+      padding: 10px 14px;
       border-radius: var(--radius-pill);
-      background: var(--caritas-red);
+      background: var(--red);
       color: white;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-    }
-
-    h1,
-    h2 {
-      font-family: Athelas, "Iowan Old Style", Georgia, serif;
-      line-height: 1.02;
-      letter-spacing: -0.02em;
     }
 
     h1 {
-      margin-top: 1rem;
-      font-size: clamp(2.6rem, 6vw, 4.6rem);
-      color: var(--caritas-red);
-      max-width: 10ch;
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1.05;
+      margin-top: 14px;
+      max-width: 14ch;
     }
 
     .intro {
-      margin-top: 1rem;
-      max-width: 60ch;
-      color: rgba(44, 44, 44, 0.75);
-      line-height: 1.7;
-      font-size: 1.02rem;
+      margin-top: 12px;
+      max-width: 48ch;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      font-size: 1rem;
     }
 
+    /* ── flow diagram ── */
+    .flow {
+      margin-top: 28px;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: white;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .flow-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .flow-diagram {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* ── card grid ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.25rem;
-      padding: 1rem 0 4rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 540px) {
+      .grid { grid-template-columns: 1fr; }
     }
 
     .card {
-      padding: 1.4rem;
-      border-radius: var(--radius-card);
+      padding: 22px 20px;
+      border-radius: var(--radius);
       background: white;
-      border: 1px solid var(--caritas-border);
-      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
 
-    .card-kicker {
-      font-size: 0.72rem;
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-num {
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: rgba(44, 44, 44, 0.5);
+      color: var(--text-muted);
     }
 
     .card h2 {
-      margin-top: 0.5rem;
-      font-size: 2rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-top: 6px;
+      line-height: 1.15;
     }
 
     .card p {
-      margin-top: 0.7rem;
-      color: rgba(44, 44, 44, 0.72);
-      line-height: 1.65;
+      margin-top: 6px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      font-size: 0.88rem;
+      flex: 1;
     }
 
-    .button {
+    .card-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      margin-top: 1rem;
-      padding: 0.9rem 1.25rem;
+      min-height: 42px;
+      margin-top: 14px;
+      padding: 0 16px;
       border-radius: var(--radius-pill);
-      background: var(--caritas-red);
+      background: var(--red);
       color: white;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
+      align-self: flex-start;
     }
 
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    /* ── animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+
+    .anim { animation: fadeUp 0.5s ease-out both; }
+    .anim-1 { animation-delay: 0.04s; }
+    .anim-2 { animation-delay: 0.1s; }
+    .anim-3 { animation-delay: 0.16s; }
+    .anim-4 { animation-delay: 0.22s; }
+    .anim-5 { animation-delay: 0.28s; }
   </style>
 </head>
 <body>
   <div class="shell">
-    <header>
-      <span class="eyebrow">Mobile Layout Workspace</span>
-      <h1>Independent screens for app iteration.</h1>
-      <p class="intro">
-        Each screen now lives in its own HTML file so layout changes can be made in isolation before rebuilding them in
-        Android Studio.
-      </p>
-    </header>
+    <span class="eyebrow anim anim-1">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+      Mobile App Mocks
+    </span>
 
-    <main class="grid">
-      <a class="card" href="login.html">
-        <div class="card-kicker">Screen 0</div>
+    <h1 class="anim anim-1">Caritas HARVEST</h1>
+    <p class="intro anim anim-1">
+      Static HTML screens for the mobile field app. Each screen is a standalone file — edit in isolation, then rebuild in Android Studio.
+    </p>
+
+    <div class="flow anim anim-2">
+      <div class="flow-label">App Flow (No bottom navigation)</div>
+      <div class="flow-diagram">Login ──→ Home (hub)
+               ├──→ Report Form ──→ Review ──→ Sent ──→ Home
+               └──→ Calendar ──→ Home</div>
+    </div>
+
+    <div class="grid">
+      <a class="card anim anim-2" href="login.html">
+        <div class="card-num">Screen 0</div>
         <h2>Login</h2>
-        <p>Simple sign in with one clear action and minimal text.</p>
-        <span class="button">Open layout</span>
+        <p>Phone number + PIN. One clear action, bilingual labels.</p>
+        <span class="card-btn">Open</span>
       </a>
 
-      <a class="card" href="home.html">
-        <div class="card-kicker">Screen 1</div>
+      <a class="card anim anim-3" href="home.html">
+        <div class="card-num">Screen 1</div>
         <h2>Home</h2>
-        <p>Simple home screen with village name, sync state, and one main action.</p>
-        <span class="button">Open layout</span>
+        <p>Hub screen — village name, two big CTAs, last report summary.</p>
+        <span class="card-btn">Open</span>
       </a>
 
-      <a class="card" href="report-form.html">
-        <div class="card-kicker">Screen 2</div>
+      <a class="card anim anim-4" href="report-form.html">
+        <div class="card-num">Screen 2 (3 steps)</div>
         <h2>Report Form</h2>
-        <p>Short form with fewer fields, bigger touch targets, and clearer wording.</p>
-        <span class="button">Open layout</span>
+        <p>Grouped stepper fields: fertilizer, pesticide, harvest, income. Review and success screens included.</p>
+        <span class="card-btn">Open</span>
       </a>
 
-      <a class="card" href="planning.html">
-        <div class="card-kicker">Screen 3</div>
-        <h2>Planning</h2>
-        <p>Reduced planning view with only the most important next dates and recent report status.</p>
-        <span class="button">Open layout</span>
+      <a class="card anim anim-5" href="planning.html">
+        <div class="card-num">Screen 3</div>
+        <h2>Calendar</h2>
+        <p>Upcoming farm events as a scannable list with tasks and date badges.</p>
+        <span class="card-btn">Open</span>
       </a>
-    </main>
+    </div>
   </div>
 </body>
 </html>
