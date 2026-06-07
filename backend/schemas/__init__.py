@@ -4,6 +4,12 @@ from .village import VillageCreate, VillageRead, VillageUpdate
 from .calendar import SubTask, TaskCreate, TaskRead, TaskUpdate
 from .report import ReportCreate, ReportRead, ReportSummary
 from .sync import SyncStatus
+from .chat import (
+    ChatMessageCreate,
+    ChatMessageRead,
+    ChatThreadDetail,
+    ChatThreadRead,
+)
 
 __all__ = [
     "LoginRequest",
@@ -23,4 +29,8 @@ __all__ = [
     "ReportRead",
     "ReportSummary",
     "SyncStatus",
+    "ChatMessageCreate",
+    "ChatMessageRead",
+    "ChatThreadDetail",
+    "ChatThreadRead",
 ]

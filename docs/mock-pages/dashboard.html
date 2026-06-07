@@ -229,6 +229,28 @@
       height: 18px;
     }
 
+    /* Unread-chat badge on a village marker */
+    .marker-chat-badge {
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: calc(100% - 4px);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+      padding: 0.1rem 0.4rem 0.1rem 0.3rem;
+      background: var(--caritas-red);
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
+      font-weight: 700;
+      line-height: 1.4;
+      box-shadow: 0 2px 6px rgba(177,0,23,0.35);
+      white-space: nowrap;
+      z-index: 6;
+    }
+    .marker-chat-badge .badge-icon { font-size: 0.7rem; }
+
     /* Hover tooltip */
     .marker-tooltip {
       position: absolute;
@@ -707,6 +729,7 @@
 
   </div><!-- /body -->
 
+  <script src="chat-widget.js"></script>
   <script>
     const API = 'http://localhost:8000';
     const token = localStorage.getItem('access_token');
@@ -752,6 +775,7 @@
     }
 
     let activeMarker = null;
+    const villageMarkers = {};  // village_id -> marker-wrap element
 
     document.getElementById('sign-out').addEventListener('click', () => {
       localStorage.removeItem('access_token');
@@ -841,6 +865,29 @@
 
         wrap.addEventListener('click', () => selectVillage(v, wrap));
         container.appendChild(wrap);
+        villageMarkers[v.id] = wrap;
+      });
+
+      refreshUnreadBadges();
+      setInterval(refreshUnreadBadges, 30000);
+    }
+
+    async function refreshUnreadBadges() {
+      const unread = await CaritasChat.unreadByVillage();
+      Object.entries(villageMarkers).forEach(([villageId, wrap]) => {
+        const count = unread[villageId] || 0;
+        let badge = wrap.querySelector('.marker-chat-badge');
+        if (count > 0) {
+          if (!badge) {
+            badge = document.createElement('div');
+            badge.className = 'marker-chat-badge';
+            wrap.appendChild(badge);
+          }
+          badge.innerHTML = '<span class="badge-icon">&#x1F4AC;</span>' +
+            (count > 99 ? '99+' : count);
+        } else if (badge) {
+          badge.remove();
+        }
       });
     }
 

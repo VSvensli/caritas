@@ -111,5 +111,22 @@
         ]
       }
     ]
-  }
+  },
+  "chat_threads": [
+    {
+      "reporter_phone": "+6281001",
+      "messages": [
+        {"sender_phone": "+6281001", "content": "Selamat pagi, saya butuh bantuan soal jadwal tanam padi."},
+        {"sender_email": "ana@caritas.org", "content": "Selamat pagi Budi! Jadwal sudah kami update di kalender. Silakan cek."},
+        {"sender_phone": "+6281001", "content": "Terima kasih, sudah saya lihat."}
+      ]
+    },
+    {
+      "reporter_phone": "+6281002",
+      "messages": [
+        {"sender_phone": "+6281002", "content": "Laporan bulan April sudah saya kirim, mohon dicek."},
+        {"sender_email": "ana@caritas.org", "content": "Sudah kami terima, Siti. Terima kasih!"}
+      ]
+    }
+  ]
 }

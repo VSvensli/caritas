@@ -592,6 +592,7 @@
                 <th>Name</th>
                 <th>Gender</th>
                 <th>Phone</th>
+                <th style="text-align:right;">Chat</th>
               </tr>
             </thead>
             <tbody id="reporter-tbody"></tbody>
@@ -602,6 +603,7 @@
     </div><!-- /shell -->
   </main>
 
+  <script src="chat-widget.js"></script>
   <script>
     const API = 'http://localhost:8000';
     const token = localStorage.getItem('access_token');
@@ -743,9 +745,48 @@
           '<td class="td-value">' + r.full_name + '</td>' +
           '<td class="td-muted">' + (r.gender || '—') + '</td>' +
           '<td class="td-muted">' + (r.phone_number || '—') + '</td>' +
+          '<td style="text-align:right;">' +
+            '<button class="cc-chat-btn" data-reporter-id="' + r.id + '" ' +
+              'data-reporter-name="' + r.full_name.replace(/"/g, '&quot;') + '" title="Open chat">' +
+              '&#x1F4AC;' +
+            '</button>' +
+          '</td>' +
         '</tr>';
       }).join('');
+
+      // Wire chat buttons + show unread badges.
+      reporterTbody.querySelectorAll('.cc-chat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          CaritasChat.openByReporter(
+            btn.dataset.reporterId,
+            btn.dataset.reporterName
+          );
+        });
+      });
+      refreshReporterBadges();
     }
+
+    async function refreshReporterBadges() {
+      const unread = await CaritasChat.unreadByReporter();
+      document.querySelectorAll('#reporter-tbody .cc-chat-btn').forEach(btn => {
+        const count = unread[btn.dataset.reporterId] || 0;
+        let badge = btn.querySelector('.cc-badge');
+        if (count > 0) {
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'cc-badge';
+            btn.appendChild(badge);
+          }
+          badge.textContent = count > 99 ? '99+' : count;
+        } else if (badge) {
+          badge.remove();
+        }
+      });
+    }
+
+    // Refresh unread badges when the chat modal closes and on a 30s poll.
+    CaritasChat.onClose(refreshReporterBadges);
+    setInterval(refreshReporterBadges, 30000);
 
     init();
   </script>

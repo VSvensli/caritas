@@ -8,7 +8,7 @@ dependencies = [
     "uvicorn[standard]>=0.34,<1",
     "sqlalchemy>=2.0,<3",
     "python-jose[cryptography]>=3.3,<4",
-    "passlib[bcrypt]>=1.7,<2",
+    "bcrypt>=4,<6",
     "python-multipart>=0.0.9",
     "alembic>=1.14,<2",
 ]

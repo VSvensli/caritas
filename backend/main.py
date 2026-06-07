@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.database import Base, engine
-from backend.routers import auth, calendar, reports, sync, users, villages
+from backend.routers import auth, calendar, chat, reports, sync, users, villages
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,6 +28,7 @@ app.include_router(villages.router)
 app.include_router(calendar.router)
 app.include_router(reports.router)
 app.include_router(sync.router)
+app.include_router(chat.router)
 
 
 @app.get("/api/health")
