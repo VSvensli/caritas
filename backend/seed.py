@@ -48,7 +48,6 @@ def seed():
                 slug=_slugify(v["name"]),
                 latitude=v["latitude"],
                 longitude=v["longitude"],
-                population=v["population"],
             )
             db.add(village)
             village_map[v["name"]] = village

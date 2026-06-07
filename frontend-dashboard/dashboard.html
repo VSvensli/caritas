@@ -692,8 +692,8 @@
 
         <div class="gutter-stats">
           <div class="gutter-stat">
-            <div class="gutter-stat-value" id="gutter-population">—</div>
-            <div class="gutter-stat-label">Population</div>
+            <div class="gutter-stat-value" id="gutter-users">—</div>
+            <div class="gutter-stat-label">Users</div>
           </div>
           <div class="gutter-stat">
             <div class="gutter-stat-value" id="gutter-yield">—</div>
@@ -798,7 +798,7 @@
       document.getElementById('gutter-empty').style.display = 'none';
       document.getElementById('gutter-content').style.display = '';
       document.getElementById('gutter-name').textContent = village.name;
-      document.getElementById('gutter-population').textContent = village.population;
+      document.getElementById('gutter-users').textContent = village.user_count;
       document.getElementById('gutter-detail-link').href = 'village.html?id=' + village.id;
 
       const [reports, tasks] = await Promise.all([
@@ -859,7 +859,7 @@
           '<div class="marker-tooltip">' +
             '<div class="tooltip-name">' + v.name + '</div>' +
             '<div class="tooltip-meta">' +
-              '<span>' + v.population + ' population</span>' +
+              '<span>' + v.user_count + ' users</span>' +
             '</div>' +
           '</div>';
 

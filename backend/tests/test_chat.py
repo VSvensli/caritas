@@ -51,7 +51,6 @@ def env():
         slug="ende",
         latitude=0,
         longitude=0,
-        population=1,
     )
     db.add(v)
     db.flush()

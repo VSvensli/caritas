@@ -6,18 +6,18 @@
     "role": "admin"
   },
   "villages": [
-    {"name": "Desa Sukamaju", "latitude": -8.56, "longitude": 120.05, "population": 187},
-    {"name": "Desa Harapan", "latitude": -8.55, "longitude": 120.80, "population": 213},
-    {"name": "Desa Mekar", "latitude": -8.55, "longitude": 121.15, "population": 142},
-    {"name": "Ende", "latitude": -8.8432, "longitude": 121.6637, "population": 247},
-    {"name": "Desa Makmur", "latitude": -8.56, "longitude": 121.95, "population": 198},
-    {"name": "Desa Damai", "latitude": -8.48, "longitude": 122.25, "population": 165},
-    {"name": "Desa Maju", "latitude": -9.43, "longitude": 119.55, "population": 231},
-    {"name": "Desa Sejahtera", "latitude": -9.35, "longitude": 120.40, "population": 179},
-    {"name": "Desa Lestari", "latitude": -10.17, "longitude": 123.60, "population": 204},
-    {"name": "Desa Baru", "latitude": -9.80, "longitude": 124.20, "population": 156},
-    {"name": "Desa Subur", "latitude": -9.80, "longitude": 124.60, "population": 189},
-    {"name": "Desa Timur", "latitude": -8.30, "longitude": 123.60, "population": 221}
+    {"name": "Desa Sukamaju", "latitude": -8.56, "longitude": 120.05},
+    {"name": "Desa Harapan", "latitude": -8.55, "longitude": 120.80},
+    {"name": "Desa Mekar", "latitude": -8.55, "longitude": 121.15},
+    {"name": "Ende", "latitude": -8.8432, "longitude": 121.6637},
+    {"name": "Desa Makmur", "latitude": -8.56, "longitude": 121.95},
+    {"name": "Desa Damai", "latitude": -8.48, "longitude": 122.25},
+    {"name": "Desa Maju", "latitude": -9.43, "longitude": 119.55},
+    {"name": "Desa Sejahtera", "latitude": -9.35, "longitude": 120.40},
+    {"name": "Desa Lestari", "latitude": -10.17, "longitude": 123.60},
+    {"name": "Desa Baru", "latitude": -9.80, "longitude": 124.20},
+    {"name": "Desa Subur", "latitude": -9.80, "longitude": 124.60},
+    {"name": "Desa Timur", "latitude": -8.30, "longitude": 123.60}
   ],
   "reporters": {
     "village": "Ende",

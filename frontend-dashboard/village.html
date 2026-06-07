@@ -657,7 +657,7 @@
       document.getElementById('page-title').textContent = village.name;
       document.getElementById('page-meta').innerHTML =
         '<span>' + village.latitude.toFixed(4) + ', ' + village.longitude.toFixed(4) + '</span>' +
-        '<span>' + village.population + ' population</span>' +
+        '<span>' + village.user_count + ' users</span>' +
         '<span>' + reports.length + ' reports filed</span>';
 
       // Summary stats
@@ -689,7 +689,7 @@
       const firstReport = reports.length > 0 ? reports[reports.length - 1] : null;
       document.getElementById('village-info-rows').innerHTML =
         infoRow('Region', 'East Nusa Tenggara') +
-        infoRow('Population', village.population) +
+        infoRow('Users', village.user_count) +
         infoRow('Latitude', village.latitude.toFixed(4) + '°') +
         infoRow('Longitude', village.longitude.toFixed(4) + '°') +
         (firstReport ? infoRow('First report', formatDate(firstReport.reported_at)) : '');
