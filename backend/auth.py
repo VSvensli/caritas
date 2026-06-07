@@ -2,10 +2,10 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
+import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from backend.database import get_db
@@ -16,24 +16,33 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 bearer_scheme = HTTPBearer()
 
 
+def _hash(secret: str) -> str:
+    # bcrypt hashes at most the first 72 bytes; truncate to avoid the
+    # ValueError that bcrypt 5.x raises on longer inputs.
+    return bcrypt.hashpw(secret.encode("utf-8")[:72], bcrypt.gensalt()).decode("utf-8")
+
+
+def _verify(plain: str, hashed: str) -> bool:
+    return bcrypt.checkpw(plain.encode("utf-8")[:72], hashed.encode("utf-8"))
+
+
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return _hash(password)
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return _verify(plain, hashed)
 
 
 def hash_pin(pin: str) -> str:
-    return pwd_context.hash(pin)
+    return _hash(pin)
 
 
 def verify_pin(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return _verify(plain, hashed)
 
 
 def create_access_token(user: User) -> str:

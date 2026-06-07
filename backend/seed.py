@@ -2,12 +2,13 @@
 
 import json
 import uuid
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from backend.auth import hash_password, hash_pin
 from backend.database import Base, SessionLocal, engine
 from backend.models.calendar import SubTask, Task
+from backend.models.chat import ChatMessage, ChatReadReceipt, ChatThread
 from backend.models.report import Report
 from backend.models.user import Gender, Role, User
 from backend.models.village import Village
@@ -34,6 +35,9 @@ def seed():
         )
         db.add(admin_user)
         db.flush()
+
+        user_by_email: dict[str, User] = {adm["email"]: admin_user}
+        user_by_phone: dict[str, User] = {}
 
         # Villages
         village_map: dict[str, Village] = {}
@@ -66,6 +70,7 @@ def seed():
             )
             db.add(user)
             reporter_ids.append(user.id)
+            user_by_phone[u["phone_number"]] = user
         db.flush()
 
         # Reports
@@ -117,9 +122,48 @@ def seed():
                 )
                 db.add(subtask)
 
+        # Chat threads
+        chat_data = data.get("chat_threads", [])
+        base_time = datetime(2026, 5, 1, 8, 0, tzinfo=timezone.utc)
+        for t in chat_data:
+            reporter = user_by_phone[t["reporter_phone"]]
+            thread = ChatThread(id=str(uuid.uuid7()), reporter_id=reporter.id)
+            db.add(thread)
+            db.flush()
+
+            last_at = base_time
+            for j, m in enumerate(t["messages"]):
+                if "sender_phone" in m:
+                    sender = user_by_phone[m["sender_phone"]]
+                else:
+                    sender = user_by_email[m["sender_email"]]
+                last_at = base_time + timedelta(minutes=j)
+                db.add(
+                    ChatMessage(
+                        id=str(uuid.uuid7()),
+                        thread_id=thread.id,
+                        sender_id=sender.id,
+                        content=m["content"],
+                        created_at=last_at,
+                    )
+                )
+
+            thread.updated_at = last_at
+
+            # Admin has read all messages initially.
+            db.add(
+                ChatReadReceipt(
+                    id=str(uuid.uuid7()),
+                    thread_id=thread.id,
+                    user_id=admin_user.id,
+                    last_read_at=last_at + timedelta(minutes=1),
+                )
+            )
+
         db.commit()
         print(f"Seeded: {len(village_map)} villages, {len(reporter_ids)} reporters, "
-              f"{len(rpt_data['entries'])} reports, {len(task_data['entries'])} tasks")
+              f"{len(rpt_data['entries'])} reports, {len(task_data['entries'])} tasks, "
+              f"{len(chat_data)} chat threads")
 
     finally:
         db.close()

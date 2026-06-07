@@ -155,7 +155,8 @@
     }
 
     input[type="email"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="tel"] {
       width: 100%;
       padding: 0.85rem 1rem;
       border: 1px solid var(--caritas-border);
@@ -169,10 +170,48 @@
     }
 
     input[type="email"]:focus,
-    input[type="password"]:focus {
+    input[type="password"]:focus,
+    input[type="tel"]:focus {
       border-color: var(--caritas-red);
       box-shadow: 0 0 0 3px rgba(177, 0, 23, 0.1);
       background: white;
+    }
+
+    /* Auth mode toggle (segmented control) */
+    .auth-toggle {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      margin-bottom: 1.5rem;
+      background: var(--caritas-cream);
+      border: 1px solid var(--caritas-border);
+      border-radius: var(--radius-pill);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(44, 44, 44, 0.55);
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+    }
+
+    .auth-tab.active {
+      background: var(--caritas-red);
+      color: white;
+      box-shadow: 0 2px 8px rgba(177, 0, 23, 0.25);
+    }
+
+    .auth-tab:not(.active):hover {
+      color: var(--caritas-red);
     }
 
     .form-footer {
@@ -275,22 +314,43 @@
       </div>
 
       <div class="login-card">
+        <div class="auth-toggle">
+          <button type="button" class="auth-tab active" data-mode="password">Email &amp; Password</button>
+          <button type="button" class="auth-tab" data-mode="pin">Phone &amp; PIN</button>
+        </div>
+
         <form>
-          <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" id="email" placeholder="you@example.org" autocomplete="email" />
+          <!-- Email + password (staff) -->
+          <div id="fields-password">
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" id="email" placeholder="you@example.org" autocomplete="email" />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+            </div>
+
+            <div class="form-footer">
+              <label class="remember">
+                <input type="checkbox" /> Remember me
+              </label>
+              <a href="#">Forgot password?</a>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
-          </div>
+          <!-- Phone + PIN (field reporters) -->
+          <div id="fields-pin" style="display:none;">
+            <div class="form-group">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" placeholder="+6281001" autocomplete="tel" />
+            </div>
 
-          <div class="form-footer">
-            <label class="remember">
-              <input type="checkbox" /> Remember me
-            </label>
-            <a href="#">Forgot password?</a>
+            <div class="form-group">
+              <label for="pin">PIN</label>
+              <input type="password" id="pin" placeholder="••••" inputmode="numeric" maxlength="4" autocomplete="off" />
+            </div>
           </div>
 
           <button type="submit" class="button-primary">Sign In</button>
@@ -315,24 +375,55 @@
     const API = 'http://localhost:8000';
     const form = document.querySelector('form');
     const errorDiv = document.getElementById('login-error');
+    const tabs = document.querySelectorAll('.auth-tab');
+    const fieldsPassword = document.getElementById('fields-password');
+    const fieldsPin = document.getElementById('fields-pin');
+
+    let mode = 'password';
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        mode = tab.dataset.mode;
+        tabs.forEach((t) => t.classList.toggle('active', t === tab));
+        const isPin = mode === 'pin';
+        fieldsPassword.style.display = isPin ? 'none' : '';
+        fieldsPin.style.display = isPin ? '' : 'none';
+        errorDiv.style.display = 'none';
+        (isPin ? document.getElementById('phone') : document.getElementById('email')).focus();
+      });
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorDiv.style.display = 'none';
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      let endpoint, body, fallbackError;
+      if (mode === 'pin') {
+        endpoint = '/auth/pin-login';
+        body = {
+          phone_number: document.getElementById('phone').value.trim(),
+          pin: document.getElementById('pin').value,
+        };
+        fallbackError = 'Invalid phone number or PIN';
+      } else {
+        endpoint = '/auth/login';
+        body = {
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value,
+        };
+        fallbackError = 'Invalid email or password';
+      }
 
       try {
-        const res = await fetch(`${API}/auth/login`, {
+        const res = await fetch(`${API}${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify(body),
         });
 
         if (!res.ok) {
           const data = await res.json().catch(() => null);
-          errorDiv.textContent = data?.detail || 'Invalid email or password';
+          errorDiv.textContent = data?.detail || fallbackError;
           errorDiv.style.display = 'block';
           return;
         }
