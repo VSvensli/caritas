@@ -381,6 +381,17 @@
 
     let mode = 'password';
 
+    // Decode the `role` claim from a JWT access token without verifying it
+    // (the server already verified it on issue). Returns null if unreadable.
+    function roleFromToken(token) {
+      try {
+        const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(payload)).role || null;
+      } catch {
+        return null;
+      }
+    }
+
     tabs.forEach((tab) => {
       tab.addEventListener('click', () => {
         mode = tab.dataset.mode;
@@ -431,7 +442,12 @@
         const { access_token, refresh_token } = await res.json();
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);
-        window.location.href = 'dashboard.html';
+
+        // Route field reporters (villagers) to the mobile web app and
+        // staff (admin/editor/viewer) to the web dashboard.
+        const role = roleFromToken(access_token);
+        window.location.href =
+          role === 'reporter' ? '../frontend-mobile/home.html' : 'dashboard.html';
       } catch {
         errorDiv.textContent = 'Unable to connect to the server';
         errorDiv.style.display = 'block';

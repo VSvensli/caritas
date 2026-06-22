@@ -609,6 +609,22 @@
     const token = localStorage.getItem('access_token');
     if (!token) window.location.href = 'login.html';
 
+    // Read the `role` claim from a JWT without verifying it (the server
+    // already verified it on issue). Returns null if unreadable.
+    function roleFromToken(jwt) {
+      try {
+        const payload = jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(payload)).role || null;
+      } catch {
+        return null;
+      }
+    }
+
+    // Field reporters belong in the mobile app, not the staff dashboard.
+    if (roleFromToken(token) === 'reporter') {
+      window.location.href = '../frontend-mobile/home.html';
+    }
+
     const headers = { 'Authorization': 'Bearer ' + token };
     const villageId = new URLSearchParams(window.location.search).get('id');
     if (!villageId) window.location.href = 'dashboard.html';

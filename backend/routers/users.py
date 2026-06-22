@@ -4,12 +4,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.auth import AdminOnly, hash_password, hash_pin
+from backend.auth import AdminOnly, CurrentUser, hash_password, hash_pin
 from backend.database import get_db
 from backend.models.user import Role, User
 from backend.schemas.user import DashboardUserCreate, UserRead, VillageUserCreate
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+
+@router.get("/me", response_model=UserRead)
+def read_current_user(user: CurrentUser):
+    return user
 
 
 @router.get("", response_model=list[UserRead])
