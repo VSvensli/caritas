@@ -19,9 +19,10 @@ backend/
   models/          # SQLAlchemy ORM models (one file per entity)
   schemas/         # Pydantic request/response schemas (one file per entity)
   routers/         # API route handlers (one file per domain)
-frontend/          # Web dashboard for staff (planned)
-mobile/            # Mobile-friendly web app for field reporters (planned)
-docs/              # Mock pages and design assets
+frontend-dashboard/ # Web dashboard for staff (static HTML, talks to the API)
+frontend-mobile/    # Mobile-friendly web app for field reporters
+assets/             # Shared brand assets (logo, marks, spinner)
+docs/               # Architecture notes and feature plans
 ```
 
 ## Dev setup

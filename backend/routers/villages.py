@@ -3,7 +3,7 @@ import unicodedata
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from backend.auth import AnyAuthenticated, StaffWrite
@@ -22,9 +22,24 @@ def _slugify(name: str) -> str:
 router = APIRouter(prefix="/villages", tags=["villages"])
 
 
+def _set_user_count(village: Village, db: Session) -> Village:
+    village.user_count = db.execute(
+        select(func.count()).select_from(User).where(User.village_id == village.id)
+    ).scalar_one()
+    return village
+
+
 @router.get("", response_model=list[VillageRead])
 def list_villages(_user: AnyAuthenticated, db: Annotated[Session, Depends(get_db)]):
-    return db.execute(select(Village).order_by(Village.name)).scalars().all()
+    counts = dict(
+        db.execute(
+            select(User.village_id, func.count(User.id)).group_by(User.village_id)
+        ).all()
+    )
+    villages = db.execute(select(Village).order_by(Village.name)).scalars().all()
+    for village in villages:
+        village.user_count = counts.get(village.id, 0)
+    return villages
 
 
 @router.post("", response_model=VillageRead, status_code=201)
@@ -45,7 +60,7 @@ def create_village(
     db.add(village)
     db.commit()
     db.refresh(village)
-    return village
+    return _set_user_count(village, db)
 
 
 @router.get("/{village_id}", response_model=VillageRead)
@@ -58,7 +73,7 @@ def get_village(
     village = db.get(Village, village_id)
     if village is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Village not found")
-    return village
+    return _set_user_count(village, db)
 
 
 @router.put("/{village_id}", response_model=VillageRead)
@@ -90,7 +105,7 @@ def update_village(
 
     db.commit()
     db.refresh(village)
-    return village
+    return _set_user_count(village, db)
 
 
 @router.delete("/{village_id}", status_code=204)

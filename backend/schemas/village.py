@@ -13,7 +13,6 @@ class VillageUpdate(BaseModel):
     name: str | None = None
     latitude: float | None = None
     longitude: float | None = None
-    population: int | None = None
 
 
 class VillageRead(BaseModel):
@@ -22,7 +21,7 @@ class VillageRead(BaseModel):
     slug: str
     latitude: float
     longitude: float
-    population: int
+    user_count: int
     created_at: datetime
     updated_at: datetime
 

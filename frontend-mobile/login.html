@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caritas Mobile – Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #b10017;
+      --red-dark: #8f0012;
+      --cream: #faf7f2;
+      --warm-white: #fffdf9;
+      --text: #2c2218;
+      --text-secondary: rgba(44, 34, 24, 0.58);
+      --text-muted: rgba(44, 34, 24, 0.36);
+      --border: rgba(44, 34, 24, 0.09);
+      --shadow: 0 4px 24px rgba(44, 34, 24, 0.06);
+      --radius: 20px;
+      --radius-pill: 999px;
+      --app-w: 480px;
+      --font-display: 'Lora', Georgia, serif;
+      --font-body: 'Nunito', -apple-system, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--warm-white);
+      min-height: 100dvh;
+    }
+
+    .screen {
+      width: min(var(--app-w), 100%);
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .login-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 32px 24px 40px;
+    }
+
+    /* ── brand ── */
+    .brand { text-align: center; margin-bottom: 36px; }
+
+    .brand-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      object-fit: cover;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-name {
+      margin-top: 14px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--red);
+      text-align: center;
+      line-height: 1.05;
+    }
+
+    .login-sub {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── form ── */
+    .form { margin-top: 28px; display: grid; gap: 12px; }
+
+    .field {
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .field:focus-within {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(177, 0, 23, 0.08);
+    }
+
+    .field-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .field input {
+      display: block;
+      width: 100%;
+      margin-top: 6px;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field input::placeholder { color: var(--text-muted); font-weight: 500; }
+
+    .btn-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 8px;
+      padding: 0 24px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      color: white;
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(177, 0, 23, 0.22);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+    }
+
+    .btn-login:active { transform: scale(0.97); box-shadow: 0 3px 12px rgba(177, 0, 23, 0.2); }
+    .btn-login:disabled { opacity: 0.6; cursor: default; }
+
+    .error {
+      display: none;
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(177, 0, 23, 0.08);
+      border: 1px solid rgba(177, 0, 23, 0.25);
+      color: var(--red);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .help-link {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .help-link span { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── leaf deco ── */
+    .leaf-deco {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      opacity: 0.05;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .anim { animation: fadeUp 0.45s ease-out both; }
+    .anim-1 { animation-delay: 0.06s; }
+    .anim-2 { animation-delay: 0.14s; }
+    .anim-3 { animation-delay: 0.22s; }
+    .anim-4 { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <svg class="leaf-deco" viewBox="0 0 120 120" fill="none">
+      <path d="M60 8C38 30 22 58 34 82C46 106 60 112 60 112C60 112 74 106 86 82C98 58 82 30 60 8Z" fill="#5c7830" />
+      <path d="M60 22V105" stroke="#fff" stroke-width="1.5" opacity="0.3" />
+    </svg>
+
+    <div class="login-body">
+      <div class="brand anim anim-1">
+        <img class="brand-logo" src="../assets/caritas_internationalis_logo.jpeg" alt="Caritas" />
+        <div class="brand-name">Caritas Field App</div>
+      </div>
+
+      <h1 class="login-title anim anim-2">Login</h1>
+      <p class="login-sub anim anim-2">Use your phone number and PIN.<br>(Masuk dengan nomor telepon dan PIN.)</p>
+
+      <form class="form anim anim-3" id="login-form" novalidate>
+        <div class="field">
+          <label class="field-label" for="phone">Phone Number (Nomor Telepon)</label>
+          <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="username"
+                 placeholder="+62 ···" required />
+        </div>
+        <div class="field">
+          <label class="field-label" for="pin">PIN</label>
+          <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password"
+                 maxlength="4" placeholder="····" required />
+        </div>
+
+        <button class="btn-login" type="submit" id="submit-btn">Masuk — Login</button>
+        <div class="error" id="error"></div>
+      </form>
+
+      <div class="help-link anim anim-4">
+        <span>Need help? (Butuh bantuan?)</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Already signed in as a reporter? Skip straight to home.
+    (function () {
+      const claims = Session.access && decodeToken(Session.access);
+      if (claims && claims.role === 'reporter') window.location.href = 'home.html';
+    })();
+
+    const form = document.getElementById('login-form');
+    const errorEl = document.getElementById('error');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+
+      const phone_number = document.getElementById('phone').value.trim();
+      const pin = document.getElementById('pin').value;
+      if (!phone_number || !pin) {
+        showError('Enter your phone number and PIN.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in…';
+
+      try {
+        const res = await fetch(API + '/auth/pin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone_number, pin }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => null);
+          showError(data?.detail || 'Invalid phone number or PIN');
+          return;
+        }
+
+        const tokens = await res.json();
+        const claims = decodeToken(tokens.access_token);
+        if (!claims || claims.role !== 'reporter') {
+          showError('This app is for field reporters. Please use the web dashboard.');
+          return;
+        }
+
+        Session.save(tokens);
+        window.location.href = 'home.html';
+      } catch {
+        showError('Unable to connect to the server.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Masuk — Login';
+      }
+    });
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

@@ -609,6 +609,22 @@
     const token = localStorage.getItem('access_token');
     if (!token) window.location.href = 'login.html';
 
+    // Read the `role` claim from a JWT without verifying it (the server
+    // already verified it on issue). Returns null if unreadable.
+    function roleFromToken(jwt) {
+      try {
+        const payload = jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(payload)).role || null;
+      } catch {
+        return null;
+      }
+    }
+
+    // Field reporters belong in the mobile app, not the staff dashboard.
+    if (roleFromToken(token) === 'reporter') {
+      window.location.href = '../frontend-mobile/home.html';
+    }
+
     const headers = { 'Authorization': 'Bearer ' + token };
     const villageId = new URLSearchParams(window.location.search).get('id');
     if (!villageId) window.location.href = 'dashboard.html';
@@ -657,7 +673,7 @@
       document.getElementById('page-title').textContent = village.name;
       document.getElementById('page-meta').innerHTML =
         '<span>' + village.latitude.toFixed(4) + ', ' + village.longitude.toFixed(4) + '</span>' +
-        '<span>' + village.population + ' population</span>' +
+        '<span>' + village.user_count + ' users</span>' +
         '<span>' + reports.length + ' reports filed</span>';
 
       // Summary stats
@@ -689,7 +705,7 @@
       const firstReport = reports.length > 0 ? reports[reports.length - 1] : null;
       document.getElementById('village-info-rows').innerHTML =
         infoRow('Region', 'East Nusa Tenggara') +
-        infoRow('Population', village.population) +
+        infoRow('Users', village.user_count) +
         infoRow('Latitude', village.latitude.toFixed(4) + '°') +
         infoRow('Longitude', village.longitude.toFixed(4) + '°') +
         (firstReport ? infoRow('First report', formatDate(firstReport.reported_at)) : '');
